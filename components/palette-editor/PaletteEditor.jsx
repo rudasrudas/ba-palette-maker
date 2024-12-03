@@ -8,6 +8,9 @@ import { EDITOR_MODES } from './palette-settings/GeneralSettings'
 import { useRouter } from 'next/navigation'
 import { PAGES } from '@components/page-structure/PaletteMaker'
 
+const ACTIVE_COLOR_SET_VALUE = 5;
+const INACTIVE_COLOR_SET_VALUE = 3;
+
 const PaletteEditor = ({ palette, setPalette, openExport }) => {
 
     const { selectSetting, isActiveSetting, renderActiveSetting, getActiveColorSetIds, getActiveSetting } = useActiveSetting(palette, setPalette)
@@ -71,9 +74,9 @@ const PaletteEditor = ({ palette, setPalette, openExport }) => {
 
         return palette.colorGroups.reduce((o, colorGroup) => [...o, ...colorGroup?.colors.map(c => c.id)], [])
             .map((c) => {
-                if(activeColorSets.includes(c)) return '5fr'
+                if(activeColorSets.includes(c)) return ACTIVE_COLOR_SET_VALUE + 'fr'
                 else {
-                    return '3fr'
+                    return INACTIVE_COLOR_SET_VALUE + 'fr'
                 }
             }).join(' ')
     }

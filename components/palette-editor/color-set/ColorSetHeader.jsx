@@ -73,7 +73,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                         </div>
                         :
                         <>
-                            <div onClick={(e) => handleEditingChange(e)(true)} title={isEditable ? 'Edit name' : undefined} className={`group/name transition-colors flex items-center cursor-pointer border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
+                            <div onClick={(e) => handleEditingChange(e)(true)} title={isEditable ? 'Edit name' : undefined} className={`group/name transition-colors flex items-center cursor-pointer border rounded-md p-1 w-fit ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
                                 <ColorName>{name}</ColorName>
                                 { isEditable &&
                                     <IconPencil className='transition-all -my-1 h-4 cursor-pointer invisible w-0 group-hover/name:w-4 group-hover/name:ml-2 group-hover/name:visible' />

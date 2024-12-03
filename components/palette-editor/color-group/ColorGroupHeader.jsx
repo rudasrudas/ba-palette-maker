@@ -15,7 +15,7 @@ const ColorGroupHeader = ({ colorGroup, selectColorGroup, addColorSet, isActiveS
     }
 
     return (
-        <div {...props} onClick={selectColorGroup} className={`col-span-${colSpan()} cursor-pointer flex pb-2 justify-between items-center group/color-group-header`} >
+        <div {...props} onClick={selectColorGroup} className={`col-span-${colSpan()} ${isSelected ? 'min-w-[600px]' : 'min-w-[0px]'} transition-all cursor-pointer flex pb-2 justify-between items-center group/color-group-header`} >
             <div onClick={selectColorGroup} className='flex gap-2 justify-between'>
                 <TitleLarge className={`!text-3xl !leading-7 transition-all group-hover/color-group-header:border-black dark:group-hover/color-group-header:border-white border rounded-lg p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'border-transparent'}`}>{colorGroup.title}</TitleLarge>
             </div>
