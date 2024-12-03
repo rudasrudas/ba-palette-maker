@@ -1,0 +1,178 @@
+random (add) - if no colors are in the palette, suggest some random colors
+
+harmony [hue, lightness, chroma] (add) - if max suggested color count is not reached, suggest the following:
+    • Monochromatic (there's same hue in different color group, and none within x degrees in current)
+    • Analogous colors (there's hue within y degrees (analogous) but not within x degrees (same), or even better there's two already matching within y degrees, and you're within y degrees from one or both of them, but not within x degrees of another one)
+    • Triad (same as analogous but different degrees)
+    • Complementary (there's color 180 degrees away but not within x degrees)
+    • Split complementary (same as analogous and triad but not equal y degrees to the different sides)
+    • Square (there's hue 90 degrees away, or two or even three, all at different multiples of 90, but not if you're within x degrees within another one)
+
+harmony [hue] (alter) - if you're within x degrees, but not within z degrees (so close it doesn't matter) of a suggestion above, instead suggest:
+    • Adjust the hue to match the suggestion above
+
+harmony (remove) - //If there's too many colors, suggest to remove the least balanced one - especially if it's within x degrees of another one
+
+contrast, [lightness] (alter) - compare color contrast in the color group based on the chroma (lower = more contrast required). If there's not enough:
+    • Lower color group min lightness
+    • Increase color group max lightness
+    (maybe offer three options - more lightness, less lightness, do both)
+
+contrast, [lightness] (alter) - compare color contrast in the whole palette, if there's too few valid contrasting combinations for the number of total colors:
+    • Lower color group min lightness
+    • Increase color group max lightness
+    (maybe offer three options - more lightness, less lightness, do both)
+
+contrast, [tintDistribution] (alter) - compare if there's enough lightness contrast in a color group between the neighboring colors. If not:
+    • Adjust difference between tint distribution points to maximize coherent contrast
+
+contrast, [chroma] (alter) - check if the chroma and max lightness ratio is sufficient, if not:
+    • Reduce saturation until it does
+
+colorCount (alter) - check if the number of contrasting colors of each given color is above the treshold. If not:
+    • Find the most efficient increase in color count for any of the color groups that would result in reaching the treshold (if can't be done, probably not enough contrast, so ignore this in that case)
+
+
+
+///////////////////
+Generating palettes
+///////////////////
+
+input: Array of oklch colors to include
+
+output: Array of Palette objects of Accents, Neutrals and Grays color groups
+
+Steps in pseudo code:
+
+1. Define color harmony to work with
+    1.1 Extract given hues
+    1.2 Group hues if they're within 2 degrees [Magic number] of each other and use
+        the one with higher chroma as original
+    1.3 Go through each color harmony and evaluate how well it would
+        work with given hues
+        - 1 hue would match every harmony
+        - 2 hues would match one of analogous, triadic, (complementary and square) or
+            split complementary, and always tetradic
+        - 3 hues would match one of analogous, triadic, square or split complementary
+            and most likely always tetradic. Never complementary, sometimes square
+2. Generate list of hues to work with
+    2.1 Define missing hues within the harmony and add them
+3. Define list of color hues to work within each color group
+    3.1 Place each original hue into their color groups
+    3.2 Generate a list of possible variations, where each variation gets
+        some colors assigned to the color groups [Magic numbers].
+        The 
+4. Calculate lightness distribution and chroma distribution 
+   based on the lightness and chroma of the given colors
+    4.1 For each color group, get a list of possible color counts
+    4.2 Pick out random [Magic number] lists of
+        min and max values, where the range would cover values of the given colors
+    4.3 Generate a list of possible point groups to test, where
+        each value (y) crosses one of the color interval line (x),
+        and points increase in both x and y compared to the previous ones
+    4.4 Filter the possible point groups out by validating if a bezier
+        curve can be drawn through the points with 0 to 1 value limits
+        for each p1 to p4 value
+5. Build color palettes
+    5.1 Mix harmonies (hue lists assigned to color groups), lightness (min, max and distribution),
+        and chroma (min, max and distribution) results to generate endless color palettes
+
+
+originalHues [
+    { original, corrected (if within 2 degrees of another) }
+]
+createdHues []
+colorGroups [
+    { name: accents, colors: [] }
+    { name: neutrals, colors: [] }
+    { name: grays, colors: [] }
+]
+
+
+
+///////////////////////////////////
+
+start ----------- end
+
+curve /////////
+
+adjust start or end:
+take locked value(-s), check their required lightness, curve fit the new curve to match the start and end lightness range, while passing through the required values
+
+adjust curve control points:
+take locked value(-s), check their required lightness, curve fit so that they match the points at designated interval points
+
+
+/////////////////
+Color harmonies
+/////////////////
+
+Take in original hues, return array of possible harmonious hues for the given harmony
+
+When evaluating provided colors, count colors within 2 degrees of each other as the same
+and use the one with highest chroma as the true hue
+
+Monochromatic:
+- if one:
+    a. return
+
+Analogous:
+- if one:
+    a. -30, -60
+    b. -30, +30
+    c. +30, +60
+- if two, if 30 (+-10) [x] - 2 grouped:
+    a. -x
+    b. +x
+- if two, if 60 (+-20) - 2 grouped:
+    a. smallest gap
+- if three, if 30 (+-10) - 3 grouped:
+    a. return
+
+Complementary:
+- if one:
+    a. largest gap
+- if two, if 180 (+-30) - 2 grouped:
+    a. return
+
+Split complementary:
+- if one:
+    a. -150, +150
+    b. -60, +150
+    c. -150, +60
+- if two, if 60 (+-20) - 2 grouped:
+    a. largest gap
+- if two, if 150 (+-20) - 2 grouped:
+    a. -60
+    b. +60
+- if three, if 150 (+-20) - 3 grouped:
+    a. return
+
+Triadic:
+- if one:
+    a. -120, +120
+- if two, if 120 (+-15) - 2 grouped:
+    a. largest gap
+- if three, if 120 (+-15) - 3 grouped:
+    a. return
+
+Square:
+- if one:
+    a. -90, +180, +90
+- if two, if 90 (+-15) [x] - 2 grouped:
+    a. -(180 - x), +(180 - x)
+- if two, if 180 (+-30) - 2 grouped:
+    a. largest gap, smallest gap
+- if three, if 90 (+-15) - 3 grouped:
+    a. largest gap
+- if four, if 90 (+-15) - 4 grouped:
+    a. return
+
+Tetradic:
+- if two, if NOT 90 (+-15) [x] - 2 grouped:
+    a. -(180 - x), +(180 - x)
+- if three, if 180 (+-30) - 2 grouped and NOT 90 (+-15) - 3 grouped:
+    a. if smallest gap middle further, -smallest gap
+    b. if smallest gap middle further, +smallest gap
+- if four, if 180 (+-30) - 2x2 grouped and NOT 90 (+-15) - 4 grouped:
+    a. return

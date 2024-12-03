@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+
+/* ANIMATIONS */
+
+@keyframes growEmptyColorSet {
+    from {
+        width: 0px;
+
+    } 
+    to {
+        width: auto;
+    }
+}
+
+.grow-empty-color-set {
+    animation: growEmptyColorSet 1000ms ease-in forwards;
+}

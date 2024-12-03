@@ -1,0 +1,170 @@
+[
+    [
+        {
+            "lightness": { "range": { "min": 0.2, "max": 0.8 } },
+            "chroma": { "range": { "min": 0.26, "max": 0.26 } },
+            "count": 6,
+            "colors": [
+                { "hue": 30 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.2, "max": 0.8 } },
+            "chroma": { "range": { "min": 0.025, "max": 0.025 } },
+            "count": 3,
+            "colors": [
+                { "hue": 30 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.1, "max": 0.9 } },
+            "chroma": { "range": { "min": 0.05, "max": 0.05 } },
+            "count": 8,
+            "colors": [
+                { "hue": 30 }
+            ]
+        }
+    ],
+    [
+        {
+            "lightness": { "range": { "min": 0.2, "max": 0.8 } },
+            "chroma": { "range": { "min": 0.3, "max": 0.3 } },
+            "count": 5,
+            "colors": [
+                { "hue": 120 },
+                { "hue": 240 },
+                { "hue": 0 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.2, "max": 0.8 } },
+            "chroma": { "range": { "min": 0.10, "max": 0.15 } },
+            "count": 2,
+            "colors": [
+                { "hue": 240 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.1, "max": 0.9 } },
+            "chroma": { "range": { "min": 0.01, "max": 0.01 } },
+            "count": 9,
+            "colors": [
+                { "hue": 10 }
+            ]
+        }
+    ],
+    [
+        {
+            "lightness": { "range": { "min": 0.2, "max": 0.8 } },
+            "chroma": { "range": { "min": 0.3, "max": 0.3 } },
+            "count": 3,
+            "colors": [
+                { "hue": 65 },
+                { "hue": 245 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.3, "max": 0.7 } },
+            "chroma": { "range": { "min": 0.08, "max": 0.10 } },
+            "count": 7,
+            "colors": [
+                { "hue": 65 },
+                { "hue": 245 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.3, "max": 0.7 } },
+            "chroma": { "range": { "min": 0.02, "max": 0.04 } },
+            "count": 5,
+            "colors": [
+                { "hue": 65 }
+            ]
+        }
+    ],
+    [
+        {
+            "lightness": { "range": { "min": 0.2, "max": 0.8 } },
+            "chroma": { "range": { "min": 0.15, "max": 0.15 } },
+            "count": 7,
+            "colors": [
+                { "hue": 210 },
+                { "hue": 260 },
+                { "hue": 15 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.3, "max": 0.7 } },
+            "chroma": { "range": { "min": 0.08, "max": 0.10 } },
+            "count": 2,
+            "colors": [
+                { "hue": 260 },
+                { "hue": 15 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.3, "max": 0.7 } },
+            "chroma": { "range": { "min": 0.02, "max": 0.04 } },
+            "count": 8,
+            "colors": [
+                { "hue": 260 }
+            ]
+        }
+    ],
+    [
+        {
+            "lightness": { "range": { "min": 0.6, "max": 0.95 } },
+            "chroma": { "range": { "min": 0.15, "max": 0.25 } },
+            "count": 7,
+            "colors": [
+                { "hue": 130 },
+                { "hue": 310 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.6, "max": 0.8 } },
+            "chroma": { "range": { "min": 0.07, "max": 0.07 } },
+            "count": 6,
+            "colors": [
+                { "hue": 130 },
+                { "hue": 220 },
+                { "hue": 310 },
+                { "hue": 40 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.05, "max": 0.55 } },
+            "chroma": { "range": { "min": 0.01, "max": 0.01 } },
+            "count": 9,
+            "colors": [
+                { "hue": 130 }
+            ]
+        }
+    ],
+    [
+        {
+            "lightness": { "range": { "min": 0.7, "max": 0.95 } },
+            "chroma": { "range": { "min": 0.15, "max": 0.15 } },
+            "count": 5,
+            "colors": [
+                { "hue": 184 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.7, "max": 0.95 } },
+            "chroma": { "range": { "min": 0.04, "max": 0.04 } },
+            "count": 5,
+            "colors": [
+                { "hue": 184 },
+                { "hue": 4 }
+            ]
+        },
+        {
+            "lightness": { "range": { "min": 0.5, "max": 0.65 } },
+            "chroma": { "range": { "min": 0.02, "max": 0.02 } },
+            "count": 3,
+            "colors": [
+                { "hue": 184 }
+            ]
+        }
+    ]
+]

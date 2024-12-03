@@ -1,0 +1,34 @@
+import Analytics from "@components/page-structure/Analytics"
+import Favicon from "@components/page-structure/Favicon"
+import { ConsentProvider } from "@context/ConsentContext"
+import "@styles/global.css"
+
+import { brittiSans } from "@utils/fonts"
+import { ThemeProvider } from "next-themes"
+import { Suspense } from "react"
+
+export const metadata = {
+  title: "Color Palette Maker - Generate, perfect and export",
+  description: "Free color tool ideal for web and graphic designers. Create palettes for Websites, Apps, Company branding and much more.",
+}
+
+export default function RootLayout({ children }) {
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <link rel="icon" href="/favicon.ico" sizes="any" />
+            <Suspense>
+                <ThemeProvider attribute="class">
+                    <ConsentProvider>
+                        <head>
+                            <Favicon />
+                        </head>
+                        <body className={`${brittiSans.className} overflow-x-hidden min-h-dvh h-full w-full flex flex-col items-stretch bg-white dark:bg-black`}>
+                            {children}
+                        </body>
+                        <Analytics/>
+                    </ConsentProvider>
+                </ThemeProvider>
+            </Suspense>
+        </html>
+    )
+}
