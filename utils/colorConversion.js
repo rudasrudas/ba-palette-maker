@@ -1,5 +1,13 @@
 import chromaJs from "chroma-js"
 
+export const cleanAngle = (value) => {
+    return ((value % 360) + 360) % 360;
+}
+
+export const mapRange = (x, inMin, inMax, outMin, outMax) => {
+    return outMin + ((x - inMin) * (outMax - outMin)) / (inMax - inMin);
+}
+
 export const isOklch = (value) => {
     return value !== null && typeof value === 'object' && 
            'lightness' in value && 'chroma' in value && 'hue' in value;

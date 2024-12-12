@@ -4,7 +4,7 @@ const ParameterSmall = ({ title, children, className = '', visibility = true, ho
         if(horizontal) {
             return 'gap-2 items-center'
         } else {
-            return 'flex-col'
+            return 'gap-1 flex-col'
         }
     }
     
@@ -12,12 +12,12 @@ const ParameterSmall = ({ title, children, className = '', visibility = true, ho
         <div className={`flex ${flexFlow()} mr-auto ${visibility ? '' : 'hidden '} ${className}`} {...props}>
             { reverse ? 
                 <>
-                    {children}
+                    <div className="flex gap-1 items-center">{children}</div>
                     <span className='text-xs select-none whitespace-nowrap font-medium'>{title}</span>
                 </> :
                 <>
                     <span className='text-xs select-none whitespace-nowrap font-medium'>{title}</span>
-                    {children}
+                    <div className="flex gap-1 items-center">{children}</div>
                 </>
             }
         </div>

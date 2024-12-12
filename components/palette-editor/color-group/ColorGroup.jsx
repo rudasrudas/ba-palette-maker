@@ -41,6 +41,7 @@ const ColorGroup = ({ palette, setPalette, colorGroup, setColorGroup, contrastBa
                 onMouseEnter={() => setIsHovered(true)} 
                 onMouseLeave={() => setIsHovered(false)} 
                 colorGroup={colorGroup} 
+                setColorGroup={setColorGroup}
                 selectColorGroup={selectColorGroup} 
                 addColorSet={addColorSet}
                 isActiveSetting={isActiveSetting}

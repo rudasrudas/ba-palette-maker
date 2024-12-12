@@ -84,7 +84,7 @@ const PaletteEditor = ({ palette, setPalette, openExport }) => {
     if (palette) return (
         <>
             <div 
-                className={`transition-all gap-x-2 lg:gap-x-4 w-screen sm:w-full sm:max-w-full px-2 -mx-2 sm:mx-auto overflow-x-auto sm:overflow-x-visible grid grid-flow-col`}
+                className={`transition-all gap-x-[1vw] w-screen sm:w-full sm:max-w-full px-2 -mx-2 sm:mx-auto overflow-x-auto sm:overflow-x-visible grid grid-flow-col`}
                 style={{ gridTemplateColumns: getGridTemplateColumns() }}
             >
                 { renderColorGroups() }

@@ -57,7 +57,7 @@ const Color = ({ color, size, selectColorSet = () => {}, contrastBaseColor, setC
     }
 
     return (
-        <div className={`relative w-full min-h-8 lg:p-2 p-1 group/wrapper flex cursor-pointer grow hover:grow-[2] ${transition ? 'transition-all' : ''} ${className}`}
+        <div className={`relative w-full min-h-8 lg:p-2 p-1 group/wrapper flex cursor-pointer grow hover:grow-[2]---- ${transition ? 'transition-all' : ''} ${className}`}
             style={{ backgroundColor: finalColor(), color: color?.contrastTextColor }}
             onClick={handleColorClick}
             {...props}

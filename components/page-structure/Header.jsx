@@ -3,18 +3,42 @@
 import ButtonPrimary from '@components/ui/inputs/buttons/ButtonPrimary'
 import ButtonRow from '@components/ui/inputs/buttons/ButtonRow'
 import Logo from '@components/ui/Logo'
+import React from 'react';
 
 const Header = ({ children }) => {
+  let toolbar = null;
+  let actions = null;
+
+  React.Children.forEach(children, (child) => {
+    if (child?.type === Header.Toolbar) {
+      toolbar = child;
+    } else if (child?.type === Header.Actions) {
+      actions = child;
+    }
+  });
+
   return (
     <header className='sticky top-0 w-full z-50'>
-        <div className='flex justify-between items-center py-2 px-4 gap-4 bg-white dark:bg-black'>
+        <div className='flex justify-start items-center py-2 px-4 gap-4 bg-white dark:bg-black'>
             <Logo/>
-            <ButtonPrimary className='invisible pointer-events-none'>.</ButtonPrimary>
-            <ButtonRow>{children}</ButtonRow>
+            <ButtonRow className='mr-auto'>
+              <div className="w-1 h-full bg-gray-400"></div>
+              {toolbar}
+            </ButtonRow>
+            {/* <ButtonPrimary className='invisible pointer-events-none'>.</ButtonPrimary> */}
+            <ButtonRow>{actions}</ButtonRow>
         </div>
         <div className="bottom-0 w-full border-b border-black dark:border-white"></div>
     </header>
   )
 }
+
+Header.Toolbar = ({ children }) => {
+  return <>{children}</>;
+};
+
+Header.Actions = ({ children }) => {
+  return <>{children}</>;
+};
 
 export default Header

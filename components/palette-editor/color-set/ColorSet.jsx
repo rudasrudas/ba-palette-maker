@@ -77,10 +77,6 @@ const ColorSet = ({ color, setColor, colorGroup, isActiveColorSet, selectSetting
             `}>
                 { (color.hue && !color.empty) ? renderColors() : renderEmptyColors() }
             </div>
-
-            {/* <ColorSetLink
-                isSelected={isSelected}
-            /> */}
         </div>
     )
 }

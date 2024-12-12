@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { SETTING_TYPES } from "./useActiveSetting"
 import usePrevious from "./usePrevious"
 
-const useLinkFunctions = ({palette, setPalette, getActiveSetting, isActiveSetting}) => {
+const useLinkFunctions = ({palette, setPalette, getActiveSetting = () => {}, isActiveSetting = () => {}}) => {
 
     const createLinkColor = (color) => {
         return {

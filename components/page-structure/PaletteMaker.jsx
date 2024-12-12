@@ -14,6 +14,8 @@ import ColorblindnessNotice from '@components/page-structure/notifications/Color
 import ThemeSwitcher from '@components/ui/ThemeSwitcher'
 import Notifications from '@components/page-structure/Notifications'
 import CookieConsent from '@components/page-structure/notifications/CookieConsent'
+import ButtonSecondaryMedium from '@components/ui/inputs/buttons/ButtonSecondaryMedium'
+import ParameterDivider from '@components/ui/ParameterDivider'
 
 export const PAGES = {
     FORM: 'new',
@@ -46,17 +48,24 @@ function Edit() {
     return (
         <>
             <Header>
-                <ThemeSwitcher/>
-                { palette &&
-                    <ButtonPrimary onClick={() => setPage(PAGES.EXPORT)} tracking={{
-                        action: 'export_palette',
-                        category: 'Button',
-                        label: 'Export Button',
-                        value: '1',
-                    }}>
-                        Export & share
-                    </ButtonPrimary>
-                }
+                <Header.Toolbar>
+                    <ParameterDivider/>
+                    <ButtonSecondaryMedium>Hey</ButtonSecondaryMedium>
+                    <ParameterDivider/>
+                </Header.Toolbar>
+                <Header.Actions>
+                    <ThemeSwitcher/>
+                    { palette &&
+                        <ButtonPrimary onClick={() => setPage(PAGES.EXPORT)} tracking={{
+                            action: 'export_palette',
+                            category: 'Button',
+                            label: 'Export Button',
+                            value: '1',
+                        }}>
+                            Export & share
+                        </ButtonPrimary>
+                    }
+                </Header.Actions>
             </Header>
             <Page>
                 { isPage(PAGES.FORM) &&

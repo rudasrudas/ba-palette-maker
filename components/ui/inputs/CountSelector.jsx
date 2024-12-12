@@ -12,10 +12,18 @@ const CountSelector = ({ count, setCount, min = 0, max = 10 }) => {
     }
 
     return (
-        <div className="flex gap-4">
-            <ButtonIcon Icon={IconMinus} onClick={handleSubtract} />
-            <span className='select-none font-semibold'>{count}</span>
-            <ButtonIcon Icon={IconPlus} onClick={handleAdd} />
+        <div className="flex items-center rounded-md border border-black dark:border-white w-fit">
+            {/* <ButtonIcon Icon={IconMinus} onClick={handleSubtract} /> */}
+            <IconMinus 
+                className="w-4 h-4 mx-1 duration-75 cursor-pointer hover:scale-105 active:scale-110"
+                onClick={handleSubtract}
+            />
+            <span className='select-none mx-1 font-base aspect-square'>{count}</span>
+            <IconPlus
+                className="w-4 h-4 mx-1 duration-75 cursor-pointer hover:scale-105 active:scale-110"
+                onClick={handleAdd}
+            />
+            {/* <ButtonIcon Icon={IconPlus} onClick={handleAdd} /> */}
         </div>
     )
 }

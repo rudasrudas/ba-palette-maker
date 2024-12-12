@@ -10,7 +10,9 @@ html {
     scroll-behavior: smooth;
 }
 
-
+body.dragging * *, body.dragging *, body.dragging {
+    cursor: n-resize !important;
+}
 
 /* ANIMATIONS */
 

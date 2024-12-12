@@ -2,8 +2,16 @@ import TitleLarge from "@components/ui/text/TitleLarge"
 import ButtonNewColorSet from "./ButtonNewColorSet"
 import { SETTING_TYPES } from "@hooks/useActiveSetting"
 import Tooltip from "@components/ui/Tooltip"
+import ParameterSmall from "@components/ui/ParameterSmall"
+import CountSelector from "@components/ui/inputs/CountSelector"
+import { useCallback } from "react"
+import NumberInput from "@components/ui/inputs/number/NumberInput"
+import { mapRange } from "@utils/colorConversion"
+import ParameterDivider from "@components/ui/ParameterDivider"
+import ButtonIcon from "@components/ui/inputs/buttons/ButtonIcon"
+import { IconContrast2, IconEaseInOut, IconEaseInOutControlPoints, IconTrendingUp3 } from "@tabler/icons-react"
 
-const ColorGroupHeader = ({ colorGroup, selectColorGroup, addColorSet, isActiveSetting, isColorLimitReached, ...props }) => {
+const ColorGroupHeader = ({ colorGroup, setColorGroup, selectColorGroup, addColorSet, isActiveSetting, isColorLimitReached, ...props }) => {
 
     const isSelected = isActiveSetting(colorGroup.id)
 
@@ -14,15 +22,115 @@ const ColorGroupHeader = ({ colorGroup, selectColorGroup, addColorSet, isActiveS
         return hasNewColorSet ? colorCount : colorCount
     }
 
+    function updateNestedObject(obj, keys, val) {
+        const result = { ...obj }; // Clone only once at the top level
+        let current = result;
+        for (let i = 0; i < keys.length - 1; i++) {
+            if (!current[keys[i]]) {
+                current[keys[i]] = {};
+            } else {
+                // Clone only the necessary nested objects to ensure immutability
+                current[keys[i]] = { ...current[keys[i]] };
+            }
+            current = current[keys[i]];
+        }
+        current[keys[keys.length - 1]] = (typeof val === 'function' ? val(current[keys[keys.length - 1]]) : val);
+        return result;
+    }
+
+    const memoizedHandleParameterChange = useCallback(
+        (path) => (value) => {
+            setColorGroup(prev => updateNestedObject({ ...prev }, path, value));
+        },
+        []
+    );
+
     return (
-        <div {...props} onClick={selectColorGroup} className={`col-span-${colSpan()} ${isSelected ? 'min-w-[600px]' : 'min-w-[0px]'} transition-all cursor-pointer flex pb-2 justify-between items-center group/color-group-header`} >
+        <div {...props} onClick={selectColorGroup} className={`col-span-${colSpan()} ${isSelected ? 'min-w-fit pb-4' : 'min-w-[0px] pb-4'} transition-all cursor-pointer flex gap-2 justify-between items-end group/color-group-header`} >
             <div onClick={selectColorGroup} className='flex gap-2 justify-between'>
-                <TitleLarge className={`!text-3xl !leading-7 transition-all group-hover/color-group-header:border-black dark:group-hover/color-group-header:border-white border rounded-lg p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'border-transparent'}`}>{colorGroup.title}</TitleLarge>
+                <TitleLarge className={`!text-3xl !leading-7 transition-all group-hover/color-group-header:border-black dark:group-hover/color-group-header:border-white border rounded-lg p-1 mr-auto ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'border-transparent'}`}>{colorGroup.title}</TitleLarge>
             </div>
-            <div className={`h-1 border-b border-black dark:border-white transition-all duration-300 mr-auto ${isSelected ? 'opacity-100 w-full' : 'opacity-0 w-2'}`}></div>
-            <Tooltip text={isColorLimitReached ? 'Maximum color limit reached' : 'Add new color'}>
-                <ButtonNewColorSet onClick={addColorSet} disabled={isColorLimitReached} className={`transition-all ${isColorLimitReached ? 'group-hover/color-group-header:opacity-50' : 'group-hover/color-group-header:opacity-100'} ${isSelected ? (isColorLimitReached ? 'opacity-50' : 'opacity-100') : 'opacity-0'}`}/>
-            </Tooltip>
+            {/* <div className={`h-1 border-b border-black dark:border-white transition-all duration-300 mr-auto ${isSelected ? 'opacity-100 w-full' : 'opacity-0 w-2'}`}></div> */}
+            <div
+                onClick={(e) => e.stopPropagation()} 
+                className={`${isSelected ? 'visible' : 'invisible hidden select-none'} w-fit cursor-default flex justify-stretch h-full items-end gap-2`}
+            >
+                <ParameterDivider/>
+                <ParameterSmall title="Shades">
+                    <CountSelector
+                        setCount={memoizedHandleParameterChange(['count'])}
+                        count={colorGroup.count}
+                        min={1} 
+                        max={9}
+                    />
+                </ParameterSmall>
+                <ParameterDivider/>
+                <ParameterSmall title="Lightness range">
+                    <NumberInput
+                        setValue={memoizedHandleParameterChange(['lightness', 'range', 'min'])}
+                        value={colorGroup.lightness.range.min}
+                        transformValueForDisplay={(v) => Number((v*100).toFixed(1))}
+                        transformValueForStorage={(v) => v/100}
+                        min={colorGroup.lightness.limit.min}
+                        max={colorGroup.lightness.limit.max}
+                        step={0.1}
+                        precision={0.1}
+                        name="%"
+                        className={'max-w-14'}
+                    />
+                    <NumberInput
+                        setValue={memoizedHandleParameterChange(['lightness', 'range', 'max'])}
+                        value={colorGroup.lightness.range.max}
+                        transformValueForDisplay={(v) => Number((v*100).toFixed(1))}
+                        transformValueForStorage={(v) => v/100 + 0.0001}
+                        min={colorGroup.lightness.limit.min}
+                        max={colorGroup.lightness.limit.max}
+                        step={0.1}
+                        precision={0.1}
+                        name="%"
+                        className={'max-w-14'}
+                    />
+                    <ButtonIcon
+                        className={`aspect-square h-full`}
+                        Icon={IconEaseInOutControlPoints}
+                    />
+                </ParameterSmall>
+                <ParameterDivider/>
+                <ParameterSmall title="Saturation range">
+                    <NumberInput
+                        setValue={memoizedHandleParameterChange(['chroma', 'range', 'min'])}
+                        value={colorGroup.chroma.range.min}
+                        transformValueForDisplay={(v) => parseInt(mapRange(v, colorGroup.chroma.limit.min, colorGroup.chroma.limit.max, 0, 100))}
+                        transformValueForStorage={(v) => mapRange(v, 0, 100, colorGroup.chroma.limit.min, colorGroup.chroma.limit.max)}
+                        min={colorGroup.chroma.limit.min}
+                        max={colorGroup.chroma.limit.max}
+                        step={0.4}
+                        precision={1}
+                        name="%"
+                        className={'max-w-14'}
+                    />
+                    <NumberInput
+                        setValue={memoizedHandleParameterChange(['chroma', 'range', 'max'])}
+                        value={colorGroup.chroma.range.max}
+                        transformValueForDisplay={(v) => parseInt(mapRange(v, colorGroup.chroma.limit.min, colorGroup.chroma.limit.max, 0, 100))}
+                        transformValueForStorage={(v) => mapRange(v, 0, 100, colorGroup.chroma.limit.min, colorGroup.chroma.limit.max) + 0.0001}
+                        min={colorGroup.chroma.limit.min}
+                        max={colorGroup.chroma.limit.max}
+                        step={0.4}
+                        precision={1}
+                        name="%"
+                        className={'max-w-14'}
+                    />
+                    <ButtonIcon
+                        className={`aspect-square h-full`}
+                        Icon={IconEaseInOutControlPoints}
+                    />
+                </ParameterSmall>
+                <ParameterDivider/>
+                <Tooltip text={isColorLimitReached ? 'Maximum color limit reached' : 'Add new color'}>
+                    <ButtonNewColorSet onClick={addColorSet} disabled={isColorLimitReached} className={`transition-all ${isColorLimitReached ? 'group-hover/color-group-header:opacity-50' : 'group-hover/color-group-header:opacity-100'} ${isSelected ? (isColorLimitReached ? 'opacity-50' : 'opacity-100') : 'opacity-0'}`}/>
+                </Tooltip>
+            </div>
         </div>
     )
 }

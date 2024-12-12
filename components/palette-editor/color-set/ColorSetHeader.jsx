@@ -1,3 +1,5 @@
+import HueInput from "@components/ui/inputs/number/HueInput"
+import NumberInput from "@components/ui/inputs/number/NumberInput"
 import ColorName from "@components/ui/text/ColorName"
 import { IconLink, IconLinkOff, IconLinkPlus, IconPencil, IconTrashX, IconUnlink, IconWand, IconWandOff } from "@tabler/icons-react"
 import { useEffect, useRef, useState } from "react"
@@ -52,8 +54,9 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
     }
 
     return (
-        <div className={`flex gap-1 group/header items-center cursor-pointer ${className}`} onClick={selectColorSet} {...props}>
+        <div className={`flex gap-1 group/header items-center justify-start cursor-pointer min-w-fit ${className}`} onClick={selectColorSet} {...props}>
             { (isEditing && isEditable) ?
+                // Text input to change name
                 <>
                     <input
                         ref={inputRef}
@@ -66,20 +69,48 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                     />
                 </>
                 :
+                // Header
                 <>
                     { empty ? 
-                        <div className={`group/name transition-colors flex items-center cursor-pointer border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
-                            <span className={`truncate whitespace-nowrap leading-none`} >New color</span>
-                        </div>
-                        :
+                        // Preset header for new color
                         <>
-                            <div onClick={(e) => handleEditingChange(e)(true)} title={isEditable ? 'Edit name' : undefined} className={`group/name transition-colors flex items-center cursor-pointer border rounded-md p-1 w-fit ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
+                            <div className={`group/name transition-colors flex items-center cursor-pointer border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
+                                <span className={`truncate whitespace-nowrap leading-none`}>New color</span>
+                            </div>
+                            {
+                                isSelected &&
+                                <HueInput
+                                    colorId={color.id}
+                                    linkFunctions={linkFunctions}
+                                    hue={color.hue || 0}
+                                    setHue={(v) => setColor(prev => ({ ...prev, empty: false, hue: typeof v === 'function' ? v(prev.hue || 0) : v }))}
+                                    className={`${isSelected ? 'visible w-full' : 'invisible w-0'}`}
+                                />
+                            }
+                        </>
+                        :
+                        // Default header
+                        <>
+                            {/* Name */}
+                            <div onClick={(e) => handleEditingChange(e)(true)} title={isEditable ? 'Edit name' : undefined} className={`mr-auto group/name transition-colors flex items-center cursor-pointer border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
                                 <ColorName>{name}</ColorName>
                                 { isEditable &&
-                                    <IconPencil className='transition-all -my-1 h-4 cursor-pointer invisible w-0 group-hover/name:w-4 group-hover/name:ml-2 group-hover/name:visible' />
+                                    <IconPencil className={`transition-all -my-1 h-4 cursor-pointer ${isSelected ? 'w-4 ml-2 visible group-hover/name:scale-110' : 'w-0 invisible group-hover/name:w-4 group-hover/name:ml-2 group-hover/name:visible'}`} />
                                 }
                             </div>
-                            <div className='ml-auto flex gap-1'>
+                            {
+                                isSelected &&
+                                <HueInput
+                                    colorId={color.id}
+                                    linkFunctions={linkFunctions}
+                                    hue={color.hue}
+                                    setHue={(v) => setColor(prev => ({ ...prev, hue: typeof v === 'function' ? v(prev.hue) : v }))}
+                                    className={`${isSelected ? 'visible w-full' : 'invisible w-0'}`}
+                                />
+                            }
+                            {/* Details */}
+                            <div className='flex gap-1'>
+                                {/* Auto name */}
                                 { (isLockable && setColor) &&
                                     ( isLocked ?
                                         <span title='Enable auto name' onClick={handleColorLock(false)} className={`cursor-pointer ml-auto`} >
@@ -91,6 +122,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                                         </span>
                                     )
                                 }
+                                {/* Link */}
                                 { linkFunctions?.hasActiveColor() &&
                                     ( linkFunctions?.isLinkedToActiveColor(color) ?
                                         <span title='Remove link' className={`group/remove`} onClick={handleRemoveLink}>
@@ -105,6 +137,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                                         )
                                     )
                                 }
+                                {/* Remove */}
                                 { removeColor &&
                                     <span title='Remove from palette' onClick={removeColor}>
                                         <IconTrashX className={`h-4 cursor-pointer transition-all ${isSelected ? 'w-4 visible opacity-100' : 'w-0 invisible opacity-0'} hover:w-4 hover:scale-110`} /> 
