@@ -8,10 +8,12 @@ import { IconArrowRight } from "@tabler/icons-react"
 const HomePageHeader = () => {
   return (
     <Header>
-        <ThemeSwitcher/>
+      <Header.Actions>
+        <ThemeSwitcher horizontal={true}/>
         <ButtonPrimaryMedium href="/create" Icon={IconArrowRight}>
             Create
         </ButtonPrimaryMedium>
+      </Header.Actions>
     </Header>
   )
 }

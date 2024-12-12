@@ -4,8 +4,9 @@ import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import Switch from "./inputs/Switch"
 import ParameterSmall from "./ParameterSmall"
+import { IconMoon, IconMoonFilled, IconSun, IconSunFilled } from "@tabler/icons-react"
 
-const ThemeSwitcher = () => {
+const ThemeSwitcher = ({ className, ...props }) => {
     const [mounted, setMounted] = useState(false)
     const { theme, setTheme, systemTheme } = useTheme()
     const [isDarkMode, setIsDarkMode] = useState(false)
@@ -31,7 +32,7 @@ const ThemeSwitcher = () => {
     }
 
     return (
-        <ParameterSmall title="Dark mode" horizontal={true} className='hidden sm:flex'>
+        <ParameterSmall title="Dark mode" className={`hidden sm:flex ${className}`} {...props}>
             <Switch
                 value={theme} 
                 setValue={handleThemeChange} 
@@ -41,6 +42,8 @@ const ThemeSwitcher = () => {
                     category: 'Switch',
                     label: 'Switch theme',
                 }}
+                OffIcon={IconSunFilled}
+                OnIcon={IconMoonFilled}
             />
         </ParameterSmall>
     )

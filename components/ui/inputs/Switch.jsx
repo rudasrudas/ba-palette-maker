@@ -1,7 +1,7 @@
 import { IconCheck, IconX } from "@tabler/icons-react"
 import * as gtag from '@utils/gtag'
 
-const Switch = ({ value, setValue, isOn, onValue = true, offValue = false, showIcon = true, tracking }) => {
+const Switch = ({ value, setValue, isOn, onValue = true, offValue = false, showIcon = true, tracking, OnIcon = IconCheck, OffIcon = IconX }) => {
 
     const isOnValue = isOn ? isOn : value === onValue
 
@@ -19,9 +19,9 @@ const Switch = ({ value, setValue, isOn, onValue = true, offValue = false, showI
                 { showIcon &&
                     (
                         isOnValue ?
-                            <IconCheck className='text-black dark:text-white w-3 h-3' />
+                            <OnIcon className='text-black dark:text-white w-3 h-3' />
                             :
-                            <IconX className='text-white dark:text-black w-3 h-3' />
+                            <OffIcon className='text-white dark:text-black w-3 h-3' />
                     )
                 }
             </div>

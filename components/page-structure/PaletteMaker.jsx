@@ -16,6 +16,7 @@ import Notifications from '@components/page-structure/Notifications'
 import CookieConsent from '@components/page-structure/notifications/CookieConsent'
 import ButtonSecondaryMedium from '@components/ui/inputs/buttons/ButtonSecondaryMedium'
 import ParameterDivider from '@components/ui/ParameterDivider'
+import { IconMouse } from '@tabler/icons-react'
 
 export const PAGES = {
     FORM: 'new',
@@ -49,12 +50,18 @@ function Edit() {
         <>
             <Header>
                 <Header.Toolbar>
-                    <ParameterDivider/>
-                    <ButtonSecondaryMedium>Hey</ButtonSecondaryMedium>
-                    <ParameterDivider/>
+                    { isPage(PAGES.EDITOR) && 
+                        <>
+                            {/* <ParameterDivider/>
+                            <ButtonSecondaryMedium>
+                                <IconMouse/>
+                            </ButtonSecondaryMedium>
+                            <ParameterDivider/> */}
+                        </>
+                    }
                 </Header.Toolbar>
                 <Header.Actions>
-                    <ThemeSwitcher/>
+                    <ThemeSwitcher horizontal={true}/>
                     { palette &&
                         <ButtonPrimary onClick={() => setPage(PAGES.EXPORT)} tracking={{
                             action: 'export_palette',
