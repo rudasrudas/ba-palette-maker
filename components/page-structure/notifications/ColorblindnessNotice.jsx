@@ -21,7 +21,7 @@ const ColorblindnessNotice = () => {
             setValue()
     }, [modeId])
 
-    if(colorblindMode)
+    if(colorblindMode && colorblindMode !== COLORBLIND_MODES.NONE)
 
     return (
         <Block className='flex flex-col gap-2 max-w-72'>

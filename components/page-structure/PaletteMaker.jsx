@@ -16,7 +16,11 @@ import Notifications from '@components/page-structure/Notifications'
 import CookieConsent from '@components/page-structure/notifications/CookieConsent'
 import ButtonSecondaryMedium from '@components/ui/inputs/buttons/ButtonSecondaryMedium'
 import ParameterDivider from '@components/ui/ParameterDivider'
-import { IconMouse } from '@tabler/icons-react'
+import { IconMouse, IconPointer } from '@tabler/icons-react'
+import ButtonPrimaryMedium from '@components/ui/inputs/buttons/ButtonPrimaryMedium'
+import HeaderTool from './tools/HeaderTool'
+import { COLOR_FORMATS } from '@hooks/useColorExport'
+import HeaderTools from './tools/HeaderTools'
 
 export const PAGES = {
     FORM: 'new',
@@ -50,27 +54,21 @@ function Edit() {
         <>
             <Header>
                 <Header.Toolbar>
-                    { isPage(PAGES.EDITOR) && 
-                        <>
-                            {/* <ParameterDivider/>
-                            <ButtonSecondaryMedium>
-                                <IconMouse/>
-                            </ButtonSecondaryMedium>
-                            <ParameterDivider/> */}
-                        </>
+                    { (isPage(PAGES.EDITOR)) && 
+                        <HeaderTools/>
                     }
                 </Header.Toolbar>
                 <Header.Actions>
                     <ThemeSwitcher horizontal={true}/>
                     { palette &&
-                        <ButtonPrimary onClick={() => setPage(PAGES.EXPORT)} tracking={{
+                        <ButtonPrimaryMedium onClick={() => setPage(PAGES.EXPORT)} tracking={{
                             action: 'export_palette',
                             category: 'Button',
                             label: 'Export Button',
                             value: '1',
                         }}>
                             Export & share
-                        </ButtonPrimary>
+                        </ButtonPrimaryMedium>
                     }
                 </Header.Actions>
             </Header>

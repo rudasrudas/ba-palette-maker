@@ -1,7 +1,6 @@
 import Dropdown from "@components/ui/inputs/dropdown/Dropdown"
 import useQueryState from "@hooks/useQueryState"
 import blinder from "color-blind"
-import { useEffect } from "react"
 
 export const COLORBLIND_MODES = {
     NONE: {

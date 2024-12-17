@@ -19,10 +19,9 @@ const Header = ({ children }) => {
 
   return (
     <header className='sticky top-0 w-full z-50'>
-        <div className='flex justify-start items-center py-2 px-4 gap-4 bg-white dark:bg-black'>
+        <div className='flex justify-start items-center py-1 px-4 gap-4 bg-white dark:bg-black'>
             <Logo/>
-            <ButtonRow className='mr-auto'>
-              <div className="w-1 h-full bg-gray-400"></div>
+            <ButtonRow className='mr-auto !gap-1'>
               {toolbar}
             </ButtonRow>
             {/* <ButtonPrimary className='invisible pointer-events-none'>.</ButtonPrimary> */}

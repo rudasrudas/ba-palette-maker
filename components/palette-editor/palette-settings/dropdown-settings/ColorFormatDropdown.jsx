@@ -10,7 +10,7 @@ const ColorFormatDropdown = () => {
     const currentFormat = colorFormats.find(cf => cf.value === value) || COLOR_FORMATS.HEX
 
     return (
-        <Dropdown
+        <DropdownSmall
             options={colorFormats}
             defaultOption={currentFormat}
             onChange={(format) => setValue(format.value)}
