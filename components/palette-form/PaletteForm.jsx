@@ -113,8 +113,8 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
 
     return (
         <div className={`flex flex-col gap-2 h-full w-full transition-all max-w-screen grow pt-8 ${className}`} {...props}>
-            <TitleLarge>Create your new palette</TitleLarge>
-            <Text className='max-w-md pt-0 mb-6'>Add your own custom brand colors or select some you like from the suggestions</Text>
+            <TitleLarge>Generate new color palette</TitleLarge>
+            <Text className='max-w-md pt-0 mb-6'>Select 1 to 3 colors that will be used to generate your palette. Use suggestions for inspiration!</Text>
             <div className="flex flex-wrap sm:flex-nowrap gap-12">
                 <div className="w-full flex flex-col gap-4">
                     <div className={`w-full flex flex-wrap sm:flex-nowrap items-center`}>

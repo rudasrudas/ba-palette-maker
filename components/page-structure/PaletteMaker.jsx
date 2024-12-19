@@ -21,6 +21,7 @@ import ButtonPrimaryMedium from '@components/ui/inputs/buttons/ButtonPrimaryMedi
 import HeaderTool from './tools/HeaderTool'
 import { COLOR_FORMATS } from '@hooks/useColorExport'
 import HeaderTools from './tools/HeaderTools'
+import TitleExtraLarge from '@components/ui/text/TitleExtraLarge'
 
 export const PAGES = {
     FORM: 'new',
@@ -52,6 +53,7 @@ function Edit() {
 
     return (
         <>
+            <TitleExtraLarge isTitle={true} className={"hidden"}>Create new color palette</TitleExtraLarge>
             <Header>
                 <Header.Toolbar>
                     { (isPage(PAGES.EDITOR)) && 

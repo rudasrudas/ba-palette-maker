@@ -12,7 +12,7 @@ const CallToActionSection = () => {
                     <ParagraphLarge className='text-center'>
                         Ready to improve your color design process?
                     </ParagraphLarge>
-                    <TitleExtraLarge className='text-center'>
+                    <TitleExtraLarge isTitle={false} className='text-center'>
                         Bring your colors to life
                     </TitleExtraLarge>
                     <ButtonPrimary href="/create" className='my-16' Icon={IconArrowRight}>
