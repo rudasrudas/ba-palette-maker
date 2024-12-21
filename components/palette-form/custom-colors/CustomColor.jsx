@@ -4,8 +4,10 @@ import InputHex from "@components/ui/inputs/text/InputHex"
 import { useEffect, useRef, useState } from "react"
 import useColorName from "@hooks/useColorName"
 import { hexToOklch, isOklch, oklchToHex } from "@utils/colorConversion"
+import ColorInputAnimation from "@components/landing/generation/graphics/ColorInputAnimation"
+import ColorInput from "@components/ui/inputs/text/ColorInput"
 
-const CustomColor = ({ color, setColor, isSelected, select, deselect, remove, className, ...props }) => {
+const CustomColor = ({ id, color, setColor, isSelected, select, deselect, remove, className, ...props }) => {
 
     const inputRef = useRef(null)
     const [isHovered, setIsHovered] = useState(false)
@@ -23,11 +25,11 @@ const CustomColor = ({ color, setColor, isSelected, select, deselect, remove, cl
         }
     }
 
-    useEffect(() => {
-        if(!isOklch(color?.oklch)) return
+    // useEffect(() => {
+    //     if(!isOklch(color?.oklch)) return
 
-        setHex(oklchToHex(color.oklch))
-    }, [color?.oklch])
+    //     setHex(oklchToHex(color.oklch))
+    // }, [color?.oklch])
     
     useEffect(() => {
         const oklch = hexToOklch(hex) || null
@@ -53,33 +55,38 @@ const CustomColor = ({ color, setColor, isSelected, select, deselect, remove, cl
 
     return (
         <div 
-            onClick={handleClick}
-            onMouseEnter={() => setIsHovered(true)} 
-            onMouseLeave={() => setIsHovered(false)}
+            // onClick={handleClick}
+            // onMouseEnter={() => setIsHovered(true)} 
+            // onMouseLeave={() => setIsHovered(false)}
             className={`flex gap-2 w-full max-w-32 min-w-10 grow flex-col h-full min-h-[250px] transition-all ${hoverEffect} ${className}`}
             {...props}
         >
-            <ColorSetHeader
+            {/* <ColorSetHeader
                 color={colorObject}
                 isHovered={isHovered}
                 className={!color.empty ? '' : 'invisible'}
                 isSelected={isSelected && !color.empty}
                 removeColor={remove}
-            />
+            /> */}
             <div className={`h-full flex flex-col gap-2 grow`}>
-                <Color
+                {/* <Color
                     color={colorObject}
                     colorFormat={{ value: null }}
                     transition={false}
                     className={`grow rounded-t-lg ${color.oklch ? 'border-transparent' : 'border-black dark:border-white'} transition-all border rounded-lg`}
+                /> */}
+                <ColorInput
+                    id={id}
+                    color={colorObject}
+                    setColor={setHex}
                 />
-                <InputHex
+                {/* <InputHex
                     ref={inputRef}
                     value={hex}
                     onFocus={select}
                     onChange={setHex}
                     className=''
-                />
+                /> */}
             </div>
         </div>
     )

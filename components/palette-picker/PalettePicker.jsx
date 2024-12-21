@@ -16,8 +16,7 @@ import { SELECTION_TYPES } from "@components/page-structure/PaletteMaker"
 
 const PalettePicker = ({ formColors, setPalette, goBack, edit, className, ...props }) => {
 
-    const providedColors = formColors.selectionType === SELECTION_TYPES.SUGGESTIONS ? formColors.selectedSuggestions : formColors.customColors
-    const { generate, createdPalettes, activePalette, selectPrevPalette, selectNextPalette } = usePaletteGenerator(providedColors)
+    const { generate, createdPalettes, activePalette, selectPrevPalette, selectNextPalette } = usePaletteGenerator(formColors)
 
     const handleOpenEditor = () => {
         setPalette(activePalette)
@@ -52,7 +51,7 @@ const PalettePicker = ({ formColors, setPalette, goBack, edit, className, ...pro
                     </ButtonRow>
                 </div>
                 <div className="flex flex-col gap-8 w-full md:w-1/2 md:ml-auto h-full">
-                    <PaletteDisplay className='w-full h-full min-h-[50dvh]' providedColors={providedColors} colorGroups={activePalette?.colorGroups} />
+                    <PaletteDisplay className='w-full h-full min-h-[50dvh]' providedColors={formColors} colorGroups={activePalette?.colorGroups} />
                     <ButtonRow className='pt-0 mt-auto'>
                         <ButtonPrimary onClick={handleOpenEditor} tracking={{
                             action: 'open_editor',

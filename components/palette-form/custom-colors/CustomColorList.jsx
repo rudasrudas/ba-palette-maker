@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react"
 import CustomColor from "./CustomColor"
-import useColor from "@hooks/useColor"
-import { oklchToHex } from "@utils/colorConversion"
 
 const CustomColorList = ({ colors, setColors, activeColor, setActiveColor }) => {
 
@@ -40,6 +37,7 @@ const CustomColorList = ({ colors, setColors, activeColor, setActiveColor }) => 
             return (
                 <CustomColor
                     key={color.id}
+                    id={color.id}
                     color={color}
                     isSelected={isSelected()}
                     select={select}

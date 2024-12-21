@@ -38,11 +38,7 @@ export const SELECTION_TYPES = {
 function Edit() {
     'use client'
     const [palette, setPalette] = useState()
-    const [formColors, setFormColors] = useState({
-        selectionType: SELECTION_TYPES.SUGGESTIONS,
-        selectedSuggestions: [],
-        customColors: [{ id: 1 }]
-    })
+    const [formColors, setFormColors] = useState([])
     const [page, setPage] = useQueryState('status')
 
     useEffect(() => {

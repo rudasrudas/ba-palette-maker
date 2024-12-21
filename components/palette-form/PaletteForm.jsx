@@ -55,14 +55,14 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
         count: SUGGESTION_COUNT
     })
 
-    const setColor = (newColor) => {
-        if(!activeCustomColor) return
+    // const setColor = (newColor) => {
+    //     if(!activeCustomColor) return
 
-        setCustomColors((prevColors) => prevColors.map(c => {
-          if (c.id !== activeCustomColor?.id) return c
-          return typeof newColor === 'function' ? newColor(c) : newColor
-        }))
-    }
+    //     setCustomColors((prevColors) => prevColors.map(c => {
+    //       if (c.id !== activeCustomColor?.id) return c
+    //       return typeof newColor === 'function' ? newColor(c) : newColor
+    //     }))
+    // }
 
     const isSuggestion = selectionType === SELECTION_TYPES.SUGGESTIONS
 
@@ -157,11 +157,11 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
                         />
                     </TabContent>
                 </div>
-                <ColorPicker
+                {/* <ColorPicker
                     color={activeCustomColor}
                     setColor={setColor}
                     className={`${(!isSuggestion && activeCustomColor) ? 'flex' : 'hidden'}`}
-                />
+                /> */}
             </div>
 
             <ButtonRow className='pt-0 mt-auto'>
