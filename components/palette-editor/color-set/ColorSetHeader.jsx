@@ -54,7 +54,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
     }
 
     return (
-        <div className={`flex gap-1 group/header items-center justify-start cursor-pointer min-w-fit ${className}`} onClick={selectColorSet} {...props}>
+        <div className={`flex gap-1 group/header items-center justify-start ${selectColorSet ? 'cursor-pointer' : 'cursor-default'}  min-w-fit ${className}`} onClick={selectColorSet} {...props}>
             { (isEditing && isEditable) ?
                 // Text input to change name
                 <>
@@ -74,7 +74,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                     { empty ? 
                         // Preset header for new color
                         <>
-                            <div className={`group/name transition-colors flex items-center cursor-pointer border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
+                            <div className={`group/name transition-colors flex items-center ${selectColorSet ? 'cursor-pointer' : 'cursor-default'} border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
                                 <span className={`truncate whitespace-nowrap leading-none`}>New color</span>
                             </div>
                             {
@@ -140,7 +140,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                                 {/* Remove */}
                                 { removeColor &&
                                     <span title='Remove from palette' onClick={removeColor}>
-                                        <IconTrashX className={`h-4 cursor-pointer transition-all ${isSelected ? 'w-4 visible opacity-100' : 'w-0 invisible opacity-0'} hover:w-4 hover:scale-110`} /> 
+                                        <IconTrashX className={`h-4 cursor-pointer transition-all ${((!!isSelected == !!selectColorSet)) ? 'w-4 visible opacity-100' : 'w-0 invisible opacity-0'} hover:w-4 hover:scale-110`} /> 
                                     </span>
                                 }
                             </div>

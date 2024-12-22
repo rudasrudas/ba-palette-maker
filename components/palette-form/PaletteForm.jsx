@@ -1,115 +1,62 @@
 'use client'
 
 import ButtonPrimary from "@components/ui/inputs/buttons/ButtonPrimary"
-import TabList from "@components/ui/inputs/tabs/TabList"
 import TitleLarge from "@components/ui/text/TitleLarge"
 import Text from "@components/ui/text/Text"
 import { IconArrowRight, IconRefresh } from "@tabler/icons-react"
-import { useEffect, useState } from "react"
 import ColorSuggestionList from "./suggestions/ColorSuggestionList"
 import ButtonRow from "@components/ui/inputs/buttons/ButtonRow"
 import Suggestions, { useSimpleSuggestions } from "@hooks/useSuggestions"
-import ButtonNewColorSet from "@components/palette-editor/color-group/ButtonNewColorSet"
-import Line from "@components/palette-editor/color-group/Line"
-import ButtonSecondaryMedium from "@components/ui/inputs/buttons/ButtonSecondaryMedium"
 import CustomColorList from "./custom-colors/CustomColorList"
-import ColorPicker from "@components/ui/inputs/sliders/ColorPicker"
-import TabContent from "@components/ui/inputs/tabs/TabContent"
-import { SELECTION_TYPES } from "@components/page-structure/PaletteMaker"
+import Title from "@components/ui/text/Title"
+import ButtonIcon from "@components/ui/inputs/buttons/ButtonIcon"
+import Tooltip from "@components/ui/Tooltip"
 
 
 const PaletteForm = ({ formColors, setFormColors, generate, className, ...props }) => {
-
-    const [activeCustomColor, setActiveCustomColor] = useState(null)
-
-    const { selectionType, selectedSuggestions, customColors } = formColors
-
-    const setSelectionType = (s) => {
-        setFormColors(prev => ({ ...prev, selectionType: s }))
-    }
-
-    const setSelectedSuggestions = (s) => {
-        setFormColors(prev => {
-            return ({
-                ...prev,
-                selectedSuggestions: typeof s === 'function' ? s(prev.selectedSuggestions) : s
-            })
-        })
-    }
-
-    const setCustomColors = (s) => {
-        setFormColors(prev => {
-            return ({
-                ...prev,
-                customColors: typeof s === 'function' ? s(prev.customColors) : s
-            })
-        })
-    }
 
     const SUGGESTION_COUNT = 6
     const MAX_SELECTED_COUNT = 3
 
     const { suggestions, refresh : refreshSuggestions } = useSimpleSuggestions({
-        existingColors: selectedSuggestions,
+        existingColors: formColors,
         action: [Suggestions.ACTIONS.ADD],
         count: SUGGESTION_COUNT
     })
 
-    // const setColor = (newColor) => {
-    //     if(!activeCustomColor) return
-
-    //     setCustomColors((prevColors) => prevColors.map(c => {
-    //       if (c.id !== activeCustomColor?.id) return c
-    //       return typeof newColor === 'function' ? newColor(c) : newColor
-    //     }))
-    // }
-
-    const isSuggestion = selectionType === SELECTION_TYPES.SUGGESTIONS
-
-    const canGenerate = (!isSuggestion && customColors.filter(c => !c.empty).length) || (isSuggestion && selectedSuggestions.length)
+    const colorCount = formColors.length
+    const maxSelectedLimitReached = colorCount >= 3
 
     const getNewCustomColor = () => {
         return {
-            id: parseInt(Math.random() * 100000), //CHANGE
+            id: parseInt(Math.random() * 100000), // To change in the future with a UUID
             oklch: null,
             empty: true
         }
     }
 
     const addCustomColor = () => {
-        if(customColors.length >= MAX_SELECTED_COUNT) return
+        if(maxSelectedLimitReached) return
 
         const newCustomColor = getNewCustomColor()
 
-        setCustomColors(prevColors => {
-            return [
-                ...prevColors.filter(c => (!c.empty || c.id === activeCustomColor?.id)),
-                newCustomColor
-            ]
-        })
+        setFormColors(prevColors => ([
+            ...prevColors,
+            newCustomColor
+        ]))
 
-        setActiveCustomColor(newCustomColor)
-
+        return newCustomColor
     }
 
-    useEffect(() => {
-        if(customColors.length <= 1) return
-        
-        const emptyColorCount = customColors.filter(c => c.empty).length
-        if(!emptyColorCount) return
+    const addSelectedColor = (suggestion) => {
 
-        setCustomColors(prev => {
-            const filtered = prev.filter(color => {
-                return (!color.empty || color.id === activeCustomColor?.id)
-            })
+        if(maxSelectedLimitReached) return
 
-            if(!filtered.length) {
-                filtered.push(getNewCustomColor())
-            }
-
-            return filtered
-        })        
-    }, [customColors])
+        setFormColors(prev => ([
+            ...prev,
+            suggestion
+        ]))
+    }
 
     return (
         <div className={`flex flex-col gap-2 h-full w-full transition-all max-w-screen grow pt-8 ${className}`} {...props}>
@@ -117,56 +64,35 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
             <Text className='max-w-md pt-0 mb-6'>Select 1 to 3 colors that will be used to generate your palette. Use suggestions for inspiration!</Text>
             <div className="flex flex-wrap sm:flex-nowrap gap-12">
                 <div className="w-full flex flex-col gap-4">
-                    <div className={`w-full flex flex-wrap sm:flex-nowrap items-center`}>
-                        <TabList
-                            className='w-fit'
-                            value={selectionType}
-                            options={[
-                                { name: 'Suggestions', value: SELECTION_TYPES.SUGGESTIONS },
-                                { name: 'Custom colors', value: SELECTION_TYPES.CUSTOM },
-                            ]}
-                            onChange={setSelectionType}
-                        />
-                        <Line isActive={isSuggestion || true} className="invisible sm:visible min-h-4 sm:min-h-0"/>
-                        { isSuggestion ?
-                            <ButtonSecondaryMedium className={`transition-all ${isSuggestion ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={refreshSuggestions}>
-                                Refresh
-                                <IconRefresh className='w-4 h-4'/>
-                            </ButtonSecondaryMedium>
-                            :
-                            <ButtonNewColorSet onClick={addCustomColor} />
-                        }
-                    </div>
-                    <TabContent value={selectionType} expected={SELECTION_TYPES.CUSTOM}>
-                        <CustomColorList
-                            colors={customColors}
-                            setColors={setCustomColors}
-                            activeColor={activeCustomColor}
-                            setActiveColor={setActiveCustomColor}
-                            max={MAX_SELECTED_COUNT}
-                        />
-                    </TabContent>
-                    <TabContent value={selectionType} expected={SELECTION_TYPES.SUGGESTIONS}>
+                    <CustomColorList
+                        colors={formColors}
+                        setColors={setFormColors}
+                        addColor={addCustomColor}
+                        maxSelectedLimitReached={maxSelectedLimitReached}
+                    />
+
+                    <div>
+                        <ButtonRow className={`mt-4 gap-2`}>
+                            <Title>Suggestions</Title>
+                            <Tooltip  title="Refresh suggestions">
+                                <ButtonIcon Icon={IconRefresh} onClick={refreshSuggestions} />
+                            </Tooltip>
+                        </ButtonRow>
                         <ColorSuggestionList
                             suggestions={suggestions} 
-                            selected={selectedSuggestions} 
-                            setSelected={setSelectedSuggestions}
+                            selected={[]}
+                            onSelect={addSelectedColor}
                             refresh={refreshSuggestions}
                             count={SUGGESTION_COUNT}
                             maxSelect={MAX_SELECTED_COUNT}
                         />
-                    </TabContent>
+                    </div>
                 </div>
-                {/* <ColorPicker
-                    color={activeCustomColor}
-                    setColor={setColor}
-                    className={`${(!isSuggestion && activeCustomColor) ? 'flex' : 'hidden'}`}
-                /> */}
             </div>
 
-            <ButtonRow className='pt-0 mt-auto'>
+            <ButtonRow className='pt-0 mt-2'>
                 <ButtonPrimary 
-                    disabled={!canGenerate} 
+                    disabled={!colorCount} 
                     onClick={generate} 
                     tracking={{
                         action: 'generate_palette',

@@ -6,6 +6,7 @@ import { EDITOR_MODES } from "../palette-settings/GeneralSettings";
 import { COLORBLIND_MODES } from "../palette-settings/dropdown-settings/ColorblindnessDropdown";
 import useColorContrast, { CONTRAST_RATINGS } from "@hooks/useColorContrast";
 import { PAGES } from "@components/page-structure/PaletteMaker";
+import { cn } from "@utils/utils";
 
 const Color = ({ color, size, selectColorSet = () => {}, contrastBaseColor, setContrastBaseColor = () => {}, className, transition = true, ...props }) => {
 
@@ -57,7 +58,7 @@ const Color = ({ color, size, selectColorSet = () => {}, contrastBaseColor, setC
     }
 
     return (
-        <div className={`relative w-full min-h-8 lg:p-2 p-1 group/wrapper flex cursor-pointer grow hover:grow-[2]---- ${transition ? 'transition-all' : ''} ${className}`}
+        <div className={cn(`relative w-full min-h-8 lg:p-2 p-1 group/wrapper flex cursor-pointer grow ${transition ? 'transition-all' : ''}`, className)}
             style={{ backgroundColor: finalColor(), color: color?.contrastTextColor }}
             onClick={handleColorClick}
             {...props}

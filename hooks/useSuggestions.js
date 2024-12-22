@@ -33,40 +33,43 @@ const TYPES = {
     RANDOM: 'random'
 }
 
+export const oklchToColorObject = (color) => {
+    const oklch = {
+        lightness: color.lightness,
+        chroma: color.chroma,
+        hue: color.hue
+    }
+    const hex = oklchToHex(oklch).toUpperCase()
+    const rgb = oklchToRgb(oklch)
+    const hsl = oklchToHsl(oklch)
+
+    return { 
+        oklch,
+        hex,
+        rgb,
+        hsl,
+        text: {
+            hex,
+            hsl: `hsl(${roundConditionally(hsl.hue, 2)} ${roundConditionally(hsl.saturation, 2)}% ${roundConditionally(hsl.lightness*100, 2)}%)`,
+            rgb: `rgb(${rgb.red} ${rgb.green} ${rgb.blue})`,
+            oklch: `oklch(${roundConditionally(color.lightness*100, 2)}% ${roundConditionally(color.chroma, 2)} ${roundConditionally(color.hue, 2)}deg)`,
+        },
+        empty: false
+    }
+}
+
 export const useSimpleSuggestions = ({ existingColors = [], action = [], parameter = [], type = [], count = 10 }) => {
 
     const [suggestions, setSuggestions] = useState([])
 
     const refresh = () => {
-        const randomColors = generateRandomColors(count)
+        const randomColors = generateRandomColors(count).map(oklchToColorObject)
         setSuggestions(randomColors)
     }
 
     const generate = () => {
         if(type.includes(TYPES.RANDOM) || !existingColors.length) {
-            const randomColors = generateRandomColors(count).map(color => {
-                const oklch = {
-                    lightness: color.lightness,
-                    chroma: color.chroma,
-                    hue: color.hue
-                }
-                const hex = oklchToHex(oklch).toUpperCase()
-                const rgb = oklchToRgb(oklch)
-                const hsl = oklchToHsl(oklch)
-
-                return { 
-                oklch,
-                hex: color.hex.toUpperCase(),
-                rgb,
-                hsl,
-                text: {
-                    hex,
-                    hsl: `hsl(${roundConditionally(hsl.hue, 2)} ${roundConditionally(hsl.saturation, 2)}% ${roundConditionally(hsl.lightness*100, 2)}%)`,
-                    rgb: `rgb(${rgb.red} ${rgb.green} ${rgb.blue})`,
-                    oklch: `oklch(${roundConditionally(color.lightness*100, 2)}% ${roundConditionally(color.chroma, 2)} ${roundConditionally(color.hue, 2)}deg)`,
-                }
-            }})
-            console.log(randomColors)
+            const randomColors = generateRandomColors(count).map(oklchToColorObject)
             setSuggestions(randomColors)
         } else {
             // Suggest based on existing colors
