@@ -5,7 +5,7 @@ import Header from '@components/page-structure/Header'
 import PaletteEditor from '@components/palette-editor/PaletteEditor'
 import ButtonPrimary from '@components/ui/inputs/buttons/ButtonPrimary'
 import { Suspense, useEffect, useState } from 'react'
-import PaletteForm from '@components/palette-form/PaletteForm'
+import PaletteForm, { getNewCustomColor } from '@components/palette-form/PaletteForm'
 import Page from '@components/page-structure/Page'
 import PaletteExport from '@components/palette-export/PaletteExport'
 import PalettePicker from '@components/palette-picker/PalettePicker'
@@ -38,12 +38,14 @@ export const SELECTION_TYPES = {
 function Edit() {
     'use client'
     const [palette, setPalette] = useState()
-    const [formColors, setFormColors] = useState([{  }])
+    const [formColors, setFormColors] = useState([getNewCustomColor()])
     const [page, setPage] = useQueryState('status')
 
     useEffect(() => {
         if(!page || (!palette && page !== PAGES.PICKER)) setPage(PAGES.FORM)
     }, [page, palette])
+
+    useEffect(() => console.log(formColors), [formColors])
 
     const isPage = (p) => p === page
 

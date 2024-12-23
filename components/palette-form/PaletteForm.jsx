@@ -12,6 +12,13 @@ import Title from "@components/ui/text/Title"
 import ButtonIcon from "@components/ui/inputs/buttons/ButtonIcon"
 import Tooltip from "@components/ui/Tooltip"
 
+export const getNewCustomColor = () => {
+    return {
+        id: parseInt(Math.random() * 100000), // To change in the future with a UUID
+        oklch: null,
+        empty: true
+    }
+}
 
 const PaletteForm = ({ formColors, setFormColors, generate, className, ...props }) => {
 
@@ -27,21 +34,13 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
     const colorCount = formColors.length
     const maxSelectedLimitReached = colorCount >= 3
 
-    const getNewCustomColor = () => {
-        return {
-            id: parseInt(Math.random() * 100000), // To change in the future with a UUID
-            oklch: null,
-            empty: true
-        }
-    }
-
     const addCustomColor = () => {
         if(maxSelectedLimitReached) return
 
         const newCustomColor = getNewCustomColor()
 
-        setFormColors(prevColors => ([
-            ...prevColors,
+        setFormColors(prev => ([
+            ...prev.filter(p => !p.empty),
             newCustomColor
         ]))
 
@@ -53,7 +52,7 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
         if(maxSelectedLimitReached) return
 
         setFormColors(prev => ([
-            ...prev,
+            ...prev.filter(p => !p.empty),
             suggestion
         ]))
     }

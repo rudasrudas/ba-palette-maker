@@ -14,7 +14,7 @@ const ColorInput = ({ id, color, setColor, className, ...props }) => {
 
     return (
         <div 
-            className="flex flex-col items-center justify-center rounded-lg  " 
+            className="relative flex flex-col items-center justify-center rounded-lg" 
             {...props}
         >
           <div
@@ -27,7 +27,7 @@ const ColorInput = ({ id, color, setColor, className, ...props }) => {
             type="color"
             value={color}
             onChange={handleColorChange}
-            className="invisible w-0 h-0"
+            className="invisible w-0 h-0 absolute top-2 right-2"
           />
         </div>
       );
