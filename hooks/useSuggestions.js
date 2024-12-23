@@ -43,11 +43,14 @@ export const oklchToColorObject = (color) => {
     const rgb = oklchToRgb(oklch)
     const hsl = oklchToHsl(oklch)
 
+    const name = useColorName({ colors: [{ hex }], useShort: true })
+
     return { 
         oklch,
         hex,
         rgb,
         hsl,
+        name,
         text: {
             hex,
             hsl: `hsl(${roundConditionally(hsl.hue, 2)} ${roundConditionally(hsl.saturation, 2)}% ${roundConditionally(hsl.lightness*100, 2)}%)`,
@@ -68,7 +71,7 @@ export const useSimpleSuggestions = ({ existingColors = [], action = [], paramet
     }
 
     const generate = () => {
-        if(type.includes(TYPES.RANDOM) || !existingColors.length) {
+        if(type.includes(TYPES.RANDOM) || !existingColors.filter(c => !c.empty).length) {
             const randomColors = generateRandomColors(count).map(oklchToColorObject)
             setSuggestions(randomColors)
         } else {

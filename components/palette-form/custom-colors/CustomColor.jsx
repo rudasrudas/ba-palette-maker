@@ -1,28 +1,22 @@
-import { useEffect, useRef, useState } from "react"
-import useColorName from "@hooks/useColorName"
-import { hexToOklch, isOklch, oklchToHex } from "@utils/colorConversion"
+import { useState } from "react"
+import { hexToOklch } from "@utils/colorConversion"
 import ColorInput from "@components/ui/inputs/text/ColorInput"
 import { oklchToColorObject } from "@hooks/useSuggestions"
 import ColorSetHeader from "@components/palette-editor/color-set/ColorSetHeader"
 
 const CustomColor = ({ id, color, setColor, remove, className, ...props }) => {
 
-    const [hex, setHex] = useState(color?.text?.hex)
-    const [name, setName] = useState(null)
     const [isHovered, setIsHovered] = useState(false);
-    
-    useEffect(() => {
-        const oklch = hexToOklch(hex) || null
+
+    const hex = color?.text?.hex
+    const setHex = (v) => {
+        const oklch = hexToOklch(v) || null
         if(oklch) {
-            const newName = useColorName({ colors: [{ hex }], useShort: true });
-            setName(newName);
             setColor(oklchToColorObject(oklch))
         } else {
-            setName(null);
             setColor(prev => ({...prev, empty: true}))
         }
-
-    }, [hex])
+    }
 
     return (
         <div
@@ -33,10 +27,7 @@ const CustomColor = ({ id, color, setColor, remove, className, ...props }) => {
         >
             <div className={`h-full flex flex-col gap-2 grow`}>
                 <ColorSetHeader
-                    color={{
-                        ...color,
-                        name
-                    }}
+                    color={color}
                     selectColorSet={!isHovered}
                     removeColor={remove}
                 />

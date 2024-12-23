@@ -1,14 +1,10 @@
 import useColorName from "@hooks/useColorName"
 import ColorSuggestion from "./ColorSuggestion"
 
-const ColorSuggestionList = ({ suggestions, selected, onSelect, refresh, count }) => {
+const ColorSuggestionList = ({ suggestions, onSelect, refresh }) => {
 
     const renderSuggestions = () => {
-        const filteredSuggestions = suggestions.filter(suggestion => !selected.includes(suggestion))
-        const list = [...selected, ...filteredSuggestions].splice(0, count)
-        
         return suggestions.map(suggestion => {
-
             const handleSuggestionSelect = () => {
                 onSelect(suggestion)
                 refresh()

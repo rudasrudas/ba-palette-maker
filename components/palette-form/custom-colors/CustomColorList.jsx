@@ -36,9 +36,9 @@ const CustomColorList = ({ colors, setColors, addColor, maxSelectedLimitReached 
         <div className='flex items-stretch gap-2 w-full min-h-32'>
             { renderCustomColors() }
             { !maxSelectedLimitReached && 
-                <div className="flex gap-2 w-full max-w-32 min-w-10 grow flex-col h-full min-h-32 transition-all">
+                <div className="flex gap-2 w-full max-w-32 min-w-10 grow flex-col h-full transition-all">
                     <ColorSetHeader color={{ name: 'Add new' }} className={"invisible select-none"}/>
-                    <ButtonNewColorSet className={"h-full"} onClick={addColor} />
+                    <ButtonNewColorSet className={"h-32"} onClick={addColor} />
                 </div>
             }
         </div>
