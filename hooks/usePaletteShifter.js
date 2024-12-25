@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 
+// Hook used for a landing page animation, in order to shift all hues within a palette
+// by a random value. This generates unlimited color palette variations while maintaining
+// the different between the hues constant.
+
 export const SHIFTER_MODES = {
     INTERVAL: 'interval',
     TRIGGER: 'trigger'

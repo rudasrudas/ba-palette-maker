@@ -1,10 +1,11 @@
 import Analytics from "@components/page-structure/Analytics"
 import Favicon from "@components/page-structure/Favicon"
+import { ThemeProvider } from "@components/ui/ThemeProvider"
+// import { ThemeProvider } from "next-themes"
 import { ConsentProvider } from "@context/ConsentContext"
 import "@styles/global.css"
 
 import { brittiSans } from "@utils/fonts"
-import { ThemeProvider } from "next-themes"
 import { Suspense } from "react"
 
 export const metadata = {

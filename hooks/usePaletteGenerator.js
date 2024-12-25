@@ -1,6 +1,8 @@
 import PaletteGenerator from "@utils/paletteGenerator"
 import { useEffect, useState } from "react"
 
+// Generates color palettes based on provided colors.
+
 const usePaletteGenerator = (providedColors) => {
     const paletteGenerator = new PaletteGenerator()
 

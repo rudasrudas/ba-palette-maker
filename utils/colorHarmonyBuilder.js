@@ -15,14 +15,17 @@ export default class ColorHarmonyBuilder {
     }
 
     bundleSimilarHues() {
+        // make a hue copy as correctedHue, so it could be adjusted
         const correctedHues = this.original.map(color => ({
             ...color,
             correctedHue: color.hue
         }));
 
+        //Iterate through the hues
         correctedHues.forEach((color, index) => {
             let maxChromaColor = color
 
+            // Find the maximum saturation hue of all colors within a tolerated range
             correctedHues.forEach((compareColor, compareIndex) => {
                 if (index !== compareIndex && this.getHueDifference(color.hue, compareColor.hue) <= SIMILARITY_TOLERANCE) {
                     if (compareColor.chroma > maxChromaColor.chroma) {
@@ -31,6 +34,7 @@ export default class ColorHarmonyBuilder {
                 }
             })
 
+            // Assign the maximum corrected hue as the correct one
             color.correctedHue = maxChromaColor.hue
         })
 
@@ -39,14 +43,20 @@ export default class ColorHarmonyBuilder {
         return Array.from(uniqueCorrectedHues)
     }
 
+    normalizeHue(hue) {
+        return ((hue % 360) + 360) % 360
+    }
+
     getColors() {
         return this.original
     }
 
     getHues() {
-        return this.hues.map(hue => hue % 360)
+        // Normalize hues before returning
+        return this.hues.map(hue => this.normalizeHue(hue))
     }
 
+    // Accept any form of color input and return a normalized OKLCH color object
     parseColor(color) {
         
         if(isOklch(color))

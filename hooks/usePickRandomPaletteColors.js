@@ -2,6 +2,8 @@ import paletteOklch from "@utils/oklch"
 import { useEffect, useState } from "react"
 import useColor from "./useColor"
 
+// Used for landing page animation. Selects random colors from a color palette.
+
 const usePickRandomPaletteColors = (palette, options) => {
     const { min = 1, max = 1 } = options
 
