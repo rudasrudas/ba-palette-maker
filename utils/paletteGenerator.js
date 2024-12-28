@@ -152,27 +152,28 @@ export default class PaletteGenerator {
         
                 initVariationColorGroups.forEach(colorGroup => {
                     const selectedHues = []
-                    const correctedHues = colorGroup.colors.map(color => 'correctedHue' in color ? color.correctedHue : null ).filter(a => a)
-                    const numberOfHuesToSelect = getRandomInt(colorGroup.hueLimits.min, colorGroup.hueLimits.max)
+                    const originalHues = colorGroup.colors.map(color => 'correctedHue' in color ? color.correctedHue : color.hue ).filter(a => a)
+                    const numberOfHuesToSelect = getRandomInt(colorGroup.hueLimits.min - originalHues.length, colorGroup.hueLimits.max - originalHues.length)
 
                     const availableHues = [...new Set([...harmony.hues])]
 
                     let attempts = 0
                     while (selectedHues.length < numberOfHuesToSelect && attempts < 100) {
                         attempts++
-                        const randomIndex = getRandomInt(0, availableHues.length)
+                        const randomIndex = getRandomInt(0, availableHues.length - 1)
                         const hue = availableHues[randomIndex]
         
-                        if (!selectedHues.includes(hue) 
-                            && !colorGroup.colors.map(c => c.hue).includes(hue)
-                            && !colorGroup.colors.map(c => c.correctedHue).includes(hue)
+                        if (!selectedHues.includes(hue)
+                            && !originalHues.includes(hue) //Not already present in the original hues
                         ) {
                             availableHues.splice(randomIndex, 1)[0] // Remove from available options
                             selectedHues.push(hue) // Select the hue
                         }
                     }
+
+                    if(attempts === 100) console.log('attemps 100 - \n' + selectedHues, availableHues, originalHues)
         
-                    colorGroup.hues = [...new Set([...colorGroup.colors.map(c => c.hue), ...selectedHues])].filter(a => a !== undefined)
+                    colorGroup.hues = [...new Set([...colorGroup.colors.map(c => c.hue), ...selectedHues])].filter(a => a)
                 })
         
                 variations.push(initVariationColorGroups.map(colorGroup => ({
@@ -298,7 +299,7 @@ export default class PaletteGenerator {
 
             return {
                 min: value - (distance * index),
-                max: value + (distance * (colorCount - index))
+                max: value + (distance * (colorCount - index - 1))
             }
         }
     }
@@ -307,8 +308,8 @@ export default class PaletteGenerator {
         const expectedDistance = (Math.abs(valueA - valueB) / Math.abs(indexA - indexB))
         const distance = (indexA === indexB) ? 0 : expectedDistance
 
-        const min = valueA - distance * indexA
-        const max = valueA + (distance * (colorCount - indexA))
+        const min = valueA - (distance * indexA)
+        const max = valueA + (distance * (colorCount - indexA - 1))
 
         return { min, max }
     }
@@ -363,6 +364,7 @@ export default class PaletteGenerator {
                     
                     const filtered = possiblePositions.filter(v => {
                         return  v.lightness.range.min < v.lightness.range.max
+                                // && v.chroma.range.min > v.chroma.range.max
                                 && v.lightness.range.min >= v.lightness.limit.min && v.lightness.range.max <= v.lightness.limit.max
                                 && v.chroma.range.min >= v.chroma.limit.min && v.chroma.range.max <= v.chroma.limit.max
                                 && Math.abs(v.lightness.range.max - v.lightness.range.min) >= v.lightness.minShadeDifference * i 
@@ -370,6 +372,8 @@ export default class PaletteGenerator {
                     })
 
                     if(filtered.length) variations.push(...filtered)
+
+                    else console.log('No filtered chroma lightness variations found', possiblePositions)
 
                 } else {
                     for(let j = 0; j < 10; j++) {
