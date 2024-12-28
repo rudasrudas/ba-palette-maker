@@ -8,10 +8,10 @@ const usePaletteGenerator = (providedColors) => {
 
     const [createdPalettes, setCreatedPalettes] = useState([])
     const [activePalette, setActivePalette] = useState(null)
-    const [variations, setVariations] = useState(paletteGenerator.createVariations(providedColors))
+    const [variations, setVariations] = useState()
 
     const generate = () => {
-        const generated = variations.generate()
+        const generated = variations?.generate()
         setCreatedPalettes(prev => [...prev, generated])
 
         setActivePalette(generated)
@@ -32,9 +32,13 @@ const usePaletteGenerator = (providedColors) => {
     }
 
     useEffect(() => {
-        generate()
+        setVariations(paletteGenerator.createVariations(providedColors))
     }, [])
 
-    return { generate, createdPalettes, activePalette, selectPrevPalette, selectNextPalette, providedColors: variations.providedColors }
+    useEffect(() => {
+        generate()
+    }, [variations])
+
+    return { generate, createdPalettes, activePalette, selectPrevPalette, selectNextPalette, providedColors: variations?.providedColors }
 }
 export default usePaletteGenerator

@@ -50,7 +50,9 @@ export default class PaletteGenerator {
                 const lcV = cgLightnessChromaVariations[Math.floor(Math.random() * lcvCount)]
 
                 updatedGroup.harmonyType = hV?.find(a => a.id === cg.id).harmonyType
-                updatedGroup.colors = hV?.find(a => a.id === cg.id).hues.map(h => ({ name: '', hue: h, isLocked: false, id: Math.floor(Math.random()*3000) }))
+                updatedGroup.colors = hV?.find(a => a.id === cg.id).hues
+                    .map(h => ({ name: '', hue: h, isLocked: false, id: Math.floor(Math.random()*3000) }))
+                    .sort(() => Math.random() - 0.5); //Sort in random order
                 updatedGroup.advanced = true
                 updatedGroup.count = lcV.count
                 updatedGroup.lightness = lcV.lightness
@@ -81,7 +83,7 @@ export default class PaletteGenerator {
                 id: 'accents',
                 lightness: {
                     limit: { min: 0, max: 1 },
-                    minShadeDifference: 0.07
+                    minShadeDifference: 0.1
                 },
                 chroma: {
                     limit: { min: 0.09, max: 0.37 },
@@ -96,11 +98,11 @@ export default class PaletteGenerator {
                 id: 'neutrals',
                 lightness: {
                     limit: { min: 0, max: 1 },
-                    minShadeDifference: 0.2
+                    minShadeDifference: 0.1
                 },
                 chroma: {
                     limit: { min: 0.01, max: 0.09 },
-                    minShadeDifference: 0.005
+                    minShadeDifference: 0
                 },
                 colors: [],
                 shadeLimits: { min: 6, max: 9 },
@@ -111,15 +113,15 @@ export default class PaletteGenerator {
                 id: 'grays',
                 lightness: {
                     limit: { min: 0, max: 1 },
-                    minShadeDifference: 0.2
+                    minShadeDifference: 0.08
                 },
                 chroma: {
                     limit: { min: 0, max: 0.02 },
-                    minShadeDifference: 0.001
+                    minShadeDifference: 0
                 },
                 colors: [],
                 shadeLimits: { min: 6, max: 9 },
-                hueLimits: { min: 1, max: 2 }
+                hueLimits: { min: 1, max: 1 }
             }
         ]
     }
@@ -141,38 +143,42 @@ export default class PaletteGenerator {
     }
 
     generateHarmonyVariations(harmonies) {
-        const numVariations = 1
+        const numVariations = 5
         const variations = []
 
         harmonies.forEach(harmony => {
             for (let i = 0; i < numVariations; i++) {
-                let variation = this.getInitialHarmonyVariation()
+                const initVariationColorGroups = this.getInitialHarmonyVariation()
         
-                variation.forEach(groupVariation => {
+                initVariationColorGroups.forEach(colorGroup => {
                     const selectedHues = []
-                    const correctedHues = groupVariation.colors.map(color => 'correctedHue' in color ? color.correctedHue : null ).filter(a => a)
-                    const numberOfSelectedHues = getRandomInt(groupVariation.hueLimits.min, groupVariation.hueLimits.max)
+                    const correctedHues = colorGroup.colors.map(color => 'correctedHue' in color ? color.correctedHue : null ).filter(a => a)
+                    const numberOfHuesToSelect = getRandomInt(colorGroup.hueLimits.min, colorGroup.hueLimits.max)
 
                     const availableHues = [...new Set([...harmony.hues])]
 
                     let attempts = 0
-                    while (selectedHues.length < numberOfSelectedHues && attempts < 100) {
+                    while (selectedHues.length < numberOfHuesToSelect && attempts < 100) {
                         attempts++
                         const randomIndex = getRandomInt(0, availableHues.length)
-                        const hue = availableHues.splice(randomIndex, 1)[0]
+                        const hue = availableHues[randomIndex]
         
-                        if (!selectedHues.includes(hue) && !correctedHues.includes(hue)) {
-                            selectedHues.push(hue)
+                        if (!selectedHues.includes(hue) 
+                            && !colorGroup.colors.map(c => c.hue).includes(hue)
+                            && !colorGroup.colors.map(c => c.correctedHue).includes(hue)
+                        ) {
+                            availableHues.splice(randomIndex, 1)[0] // Remove from available options
+                            selectedHues.push(hue) // Select the hue
                         }
                     }
         
-                    groupVariation.hues = [...new Set([...groupVariation.colors.map(c => c.hue), ...selectedHues])]
+                    colorGroup.hues = [...new Set([...colorGroup.colors.map(c => c.hue), ...selectedHues])].filter(a => a !== undefined)
                 })
         
-                variations.push(variation.map(groupVariation => ({
-                    id: groupVariation.id,
+                variations.push(initVariationColorGroups.map(colorGroup => ({
+                    id: colorGroup.id,
                     harmonyType: harmony.type,
-                    hues: groupVariation.hues.filter(a => a)
+                    hues: colorGroup.hues
                 })))
             }
         })
@@ -215,15 +221,17 @@ export default class PaletteGenerator {
                     break;
                 }
 
-                if (Math.abs(current.lightness - prev.lightness) < minShadeDifferences.lightness) {
-                    isValid = false;
-                    break;
-                }
+                // const positionDifference = Math.abs(current.position - prev.position)
 
-                if (Math.abs(current.chroma - prev.chroma) < minShadeDifferences.chroma) {
-                    isValid = false;
-                    break;
-                }
+                // if (Math.abs(current.lightness - prev.lightness) < minShadeDifferences.lightness * positionDifference) {
+                //     isValid = false;
+                //     break;
+                // }
+
+                // if (Math.abs(current.chroma - prev.chroma) < minShadeDifferences.chroma * positionDifference) {
+                //     isValid = false;
+                //     break;
+                // }
     
                 // Check for likeness thresholds to potentially assign the same position
                 if (Math.abs(current.lightness - prev.lightness) <= lightnessLikenessThreshold &&
@@ -290,16 +298,17 @@ export default class PaletteGenerator {
 
             return {
                 min: value - (distance * index),
-                max: value + (distance * (colorCount + 1 - index))
+                max: value + (distance * (colorCount - index))
             }
         }
     }
 
     calculateRangeForTwoColors(colorCount, valueA, indexA, valueB, indexB) {
-        const distance = (indexA === indexB) ? 0 : (Math.abs(valueA - valueB) / Math.abs(indexA - indexB))
+        const expectedDistance = (Math.abs(valueA - valueB) / Math.abs(indexA - indexB))
+        const distance = (indexA === indexB) ? 0 : expectedDistance
 
         const min = valueA - distance * indexA
-        const max = valueA + (distance * (colorCount + 1 - indexA))
+        const max = valueA + (distance * (colorCount - indexA))
 
         return { min, max }
     }
@@ -316,11 +325,13 @@ export default class PaletteGenerator {
                     }).map(pp => {
                         const lightness = {
                             limit: colorGroup.lightness.limit,
+                            minShadeDifference: colorGroup.lightness.minShadeDifference,
                             distribution: [0, 0, 1, 1]
                         }
 
                         const chroma = {
                             limit: colorGroup.chroma.limit,
+                            minShadeDifference: colorGroup.chroma.minShadeDifference,
                             distribution: [0, 0, 1, 1]
                         }
 
@@ -351,38 +362,38 @@ export default class PaletteGenerator {
                     })
                     
                     const filtered = possiblePositions.filter(v => {
-                        return  v.lightness.range.min < v.lightness.range.max && 
-                                v.lightness.range.min >= v.lightness.limit.min && v.lightness.range.max <= v.lightness.limit.max && 
-                                v.chroma.range.min >= v.chroma.limit.min && v.chroma.range.max <= v.chroma.limit.max 
-                                // && (v.lightness.rang e.max - v.lightness.range.min)*2 > (v.lightness.limit.max - v.lightness.limit.min)
-                                // && Math.abs(v.chroma.range.max - v.chroma.range.min)*2 < (v.chroma.limit.max - v.chroma.limit.min)
+                        return  v.lightness.range.min < v.lightness.range.max
+                                && v.lightness.range.min >= v.lightness.limit.min && v.lightness.range.max <= v.lightness.limit.max
+                                && v.chroma.range.min >= v.chroma.limit.min && v.chroma.range.max <= v.chroma.limit.max
+                                && Math.abs(v.lightness.range.max - v.lightness.range.min) >= v.lightness.minShadeDifference * i 
+                                && Math.abs(v.chroma.range.max - v.chroma.range.min) >= v.chroma.minShadeDifference * i 
                     })
 
-                    const idealFiltered = filtered.filter(v => {
-                        return  (v.lightness.range.max - v.lightness.range.min)*2 > (v.lightness.limit.max - v.lightness.limit.min)
-                                && Math.abs(v.chroma.range.max - v.chroma.range.min)*2 < (v.chroma.limit.max - v.chroma.limit.min)
-                    })
-
-                    if(idealFiltered.length) variations.push(...idealFiltered)
-                    else if(filtered.length) variations.push(...filtered)
-                    else variations.push(...possiblePositions)
+                    if(filtered.length) variations.push(...filtered)
 
                 } else {
                     for(let j = 0; j < 10; j++) {
-                        const a = this.getRandomBetween(colorGroup.lightness.limit.min * 1.1, colorGroup.lightness.limit.max * 0.9)
-                        const b = this.getRandomBetween(colorGroup.lightness.limit.min * 1.1, colorGroup.lightness.limit.max * 0.9)
-                        const c = this.getRandomBetween(colorGroup.chroma.limit.min * 1.1, colorGroup.chroma.limit.max * 0.9)
-                        const d = this.getRandomBetween(colorGroup.chroma.limit.min * 1.1, colorGroup.chroma.limit.max * 0.9)
 
+                        const minimumLightnessDifference = colorGroup.lightness.minShadeDifference * i
+                        const minLightnessTopLimit = colorGroup.lightness.limit.max - minimumLightnessDifference
+                        const lightnessMin = this.getRandomBetween(colorGroup.lightness.limit.min, minLightnessTopLimit)
+                        const lightnessMax = this.getRandomBetween(lightnessMin + minimumLightnessDifference, colorGroup.lightness.limit.max)
+                        
                         const lightness = {
                             limit: colorGroup.lightness.limit,
-                            range: { min: Math.min(a, b), max: Math.max(a, b) },
+                            range: { min: lightnessMin, max: lightnessMax },
                             distribution: [0, 0, 1, 1]
                         }
 
+                        const minimumChromaDifference = colorGroup.chroma.minShadeDifference * i
+                        const minChromaTopLimit = colorGroup.chroma.limit.max - minimumChromaDifference
+                        const chromaMin = this.getRandomBetween(colorGroup.chroma.limit.min, minChromaTopLimit)
+                        const chromaMax = this.getRandomBetween(chromaMin + minimumChromaDifference, colorGroup.chroma.limit.max)
+                        
+
                         const chroma = {
                             limit: colorGroup.chroma.limit,
-                            range: { min: c, max: d },
+                            range: { min: chromaMin, max: chromaMax },
                             distribution: [0, 0, 1, 1]
                         }
 
