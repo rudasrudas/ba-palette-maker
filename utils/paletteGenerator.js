@@ -1,5 +1,6 @@
 import { EDITOR_MODES } from "@components/palette-editor/palette-settings/GeneralSettings"
 import { COLOR_FORMATS } from "@hooks/useColorExport"
+import { getRandomInt } from "./utils"
 
 const { default: ColorHarmonyBuilder } = require("./colorHarmonyBuilder")
 
@@ -47,9 +48,6 @@ export default class PaletteGenerator {
                 const cgLightnessChromaVariations = lightnessChromaVariations.find(v => v.id === cg.id).variations
                 const lcvCount = cgLightnessChromaVariations.length
                 const lcV = cgLightnessChromaVariations[Math.floor(Math.random() * lcvCount)]
-                if(!lcV?.count) {
-                    console.log(cg.requiredColors)
-                }
 
                 updatedGroup.harmonyType = hV?.find(a => a.id === cg.id).harmonyType
                 updatedGroup.colors = hV?.find(a => a.id === cg.id).hues.map(h => ({ name: '', hue: h, isLocked: false, id: Math.floor(Math.random()*3000) }))
@@ -83,33 +81,45 @@ export default class PaletteGenerator {
                 id: 'accents',
                 lightness: {
                     limit: { min: 0, max: 1 },
+                    minShadeDifference: 0.07
                 },
                 chroma: {
                     limit: { min: 0.09, max: 0.37 },
+                    minShadeDifference: 0.01
                 },
-                colors: []
+                colors: [],
+                shadeLimits: { min: 4, max: 9 },
+                hueLimits: { min: 1, max: 3 }
             },
             {
                 title: "Neutrals",
                 id: 'neutrals',
                 lightness: {
                     limit: { min: 0, max: 1 },
+                    minShadeDifference: 0.2
                 },
                 chroma: {
                     limit: { min: 0.01, max: 0.09 },
+                    minShadeDifference: 0.005
                 },
                 colors: [],
+                shadeLimits: { min: 6, max: 9 },
+                hueLimits: { min: 1, max: 4 }
             },
             {
                 title: "Grays",
                 id: 'grays',
                 lightness: {
                     limit: { min: 0, max: 1 },
+                    minShadeDifference: 0.2
                 },
                 chroma: {
                     limit: { min: 0, max: 0.02 },
+                    minShadeDifference: 0.001
                 },
-                colors: []
+                colors: [],
+                shadeLimits: { min: 6, max: 9 },
+                hueLimits: { min: 1, max: 2 }
             }
         ]
     }
@@ -139,22 +149,24 @@ export default class PaletteGenerator {
                 let variation = this.getInitialHarmonyVariation()
         
                 variation.forEach(groupVariation => {
-                    const huesToAdd = []
+                    const selectedHues = []
                     const correctedHues = groupVariation.colors.map(color => 'correctedHue' in color ? color.correctedHue : null ).filter(a => a)
-                    const numberOfHuesToAdd = Math.ceil(Math.random() * harmony.hues.length)
+                    const numberOfSelectedHues = getRandomInt(groupVariation.hueLimits.min, groupVariation.hueLimits.max)
+
+                    const availableHues = [...new Set([...harmony.hues])]
 
                     let attempts = 0
-                    while (huesToAdd.length < numberOfHuesToAdd && attempts < 100) {
+                    while (selectedHues.length < numberOfSelectedHues && attempts < 100) {
                         attempts++
-                        const randomIndex = Math.floor(Math.random() * harmony.hues.length)
-                        const hue = harmony.hues[randomIndex]
+                        const randomIndex = getRandomInt(0, availableHues.length)
+                        const hue = availableHues.splice(randomIndex, 1)[0]
         
-                        if (!huesToAdd.includes(hue) && !correctedHues.includes(hue)) {
-                            huesToAdd.push(hue)
+                        if (!selectedHues.includes(hue) && !correctedHues.includes(hue)) {
+                            selectedHues.push(hue)
                         }
                     }
         
-                    groupVariation.hues = [...new Set([...groupVariation.colors.map(c => c.hue), ...huesToAdd])]
+                    groupVariation.hues = [...new Set([...groupVariation.colors.map(c => c.hue), ...selectedHues])]
                 })
         
                 variations.push(variation.map(groupVariation => ({
@@ -171,11 +183,12 @@ export default class PaletteGenerator {
     getInitialHarmonyVariation() {
         return this.colorGroups.map(group => ({
             id: group.id,
-            colors: group.requiredColors
+            colors: group.requiredColors,
+            hueLimits: group.hueLimits
         }))
     }
 
-    generatePossiblePositions(colorCount, colors, lightnessLikenessThreshold, chromaLikenessThreshold) {
+    generatePossiblePositions(colorCount, colors, lightnessLikenessThreshold, chromaLikenessThreshold, minShadeDifferences) {
         // Generate all permutations of positions
         let permutations = this.permute(Array.from({ length: colorCount }, (_, i) => i));
         let validConfigurations = [];
@@ -201,6 +214,16 @@ export default class PaletteGenerator {
                     isValid = false;
                     break;
                 }
+
+                if (Math.abs(current.lightness - prev.lightness) < minShadeDifferences.lightness) {
+                    isValid = false;
+                    break;
+                }
+
+                if (Math.abs(current.chroma - prev.chroma) < minShadeDifferences.chroma) {
+                    isValid = false;
+                    break;
+                }
     
                 // Check for likeness thresholds to potentially assign the same position
                 if (Math.abs(current.lightness - prev.lightness) <= lightnessLikenessThreshold &&
@@ -211,6 +234,8 @@ export default class PaletteGenerator {
                     }
                 }
             }
+
+
     
             if (isValid && positionedColors.length > 0) {
                 validConfigurations.push(positionedColors);
@@ -283,9 +308,12 @@ export default class PaletteGenerator {
         return this.colorGroups.map(colorGroup => {
             const variations = []
 
-            for(let i = colorGroup.requiredColors.length; i < 9; i++) {
+            for(let i = colorGroup.shadeLimits.min; i <= colorGroup.shadeLimits.max; i++) {
                 if(colorGroup.requiredColors.length > 0) {
-                    const possiblePositions = this.generatePossiblePositions(i, colorGroup.requiredColors, 0, 0).map(pp => {
+                    const possiblePositions = this.generatePossiblePositions(i, colorGroup.requiredColors, 0, 0, {
+                        lightness: colorGroup.lightness.minShadeDifference,
+                        chroma: colorGroup.chroma.minShadeDifference
+                    }).map(pp => {
                         const lightness = {
                             limit: colorGroup.lightness.limit,
                             distribution: [0, 0, 1, 1]
@@ -316,7 +344,7 @@ export default class PaletteGenerator {
                         }
 
                         return {
-                            count: i + 1,
+                            count: i,
                             lightness,
                             chroma
                         }
@@ -359,7 +387,7 @@ export default class PaletteGenerator {
                         }
 
                         variations.push({
-                            count: i + 1,
+                            count: i,
                             lightness,
                             chroma
                         })
