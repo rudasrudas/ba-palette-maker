@@ -1,7 +1,7 @@
 import { cleanAngle } from "@utils/colorConversion"
 import NumberInput from "./NumberInput"
 
-const HueInput = ({ colorId, hue, setHue, className, linkFunctions, ...props }) => {
+const HueInput = ({ colorId, hue, setHue, className, linkFunctions = { initiateLinkUpdate: () => {} }, ...props }) => {
 
     const { initiateLinkUpdate } = linkFunctions
 

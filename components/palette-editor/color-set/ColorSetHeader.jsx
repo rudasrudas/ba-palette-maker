@@ -54,7 +54,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
     }
 
     return (
-        <div className={`flex gap-1 group/header items-center justify-start ${selectColorSet ? 'cursor-pointer' : 'cursor-default'}  min-w-fit ${className}`} onClick={selectColorSet} {...props}>
+        <div className={`flex gap-1 group/header items-center justify-start ${selectColorSet ? 'cursor-pointer' : 'cursor-default'} w-full min-w-fit ${className}`} onClick={selectColorSet} {...props}>
             { (isEditing && isEditable) ?
                 // Text input to change name
                 <>
@@ -79,13 +79,15 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                             </div>
                             {
                                 isSelected &&
-                                <HueInput
-                                    colorId={color.id}
-                                    linkFunctions={linkFunctions}
-                                    hue={color.hue || 0}
-                                    setHue={(v) => setColor(prev => ({ ...prev, empty: false, hue: typeof v === 'function' ? v(prev.hue || 0) : v }))}
-                                    className={`${isSelected ? 'visible w-full' : 'invisible w-0'}`}
-                                />
+                                <div className="ml-auto">
+                                    <HueInput
+                                        colorId={color.id}
+                                        linkFunctions={linkFunctions}
+                                        hue={color.hue || 0}
+                                        setHue={(v) => setColor(prev => ({ ...prev, empty: false, hue: typeof v === 'function' ? v(prev.hue || 0) : v }))}
+                                        className={`${isSelected ? 'visible w-full' : 'invisible w-0'} ml-auto`}
+                                    />
+                                </div>
                             }
                         </>
                         :
@@ -98,16 +100,17 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                                     <IconPencil className={`transition-all -my-1 h-4 cursor-pointer ${isSelected ? 'w-4 ml-2 visible group-hover/name:scale-110' : 'w-0 invisible group-hover/name:w-4 group-hover/name:ml-2 group-hover/name:visible'}`} />
                                 }
                             </div>
-                            {
-                                isSelected &&
+                            <div className={`ml-auto transition-all duration-75 ${isSelected ? 'opacity-100' : 'group-hover/color-set:opacity-30 !hover:opacity-100 opacity-0'}`}>
+                            {/* <div className={`ml-auto ${isSelected ? 'visible w-fit' : 'invisible w-0'}`}> */}
                                 <HueInput
                                     colorId={color.id}
                                     linkFunctions={linkFunctions}
                                     hue={color.hue}
                                     setHue={(v) => setColor(prev => ({ ...prev, hue: typeof v === 'function' ? v(prev.hue) : v }))}
-                                    className={`${isSelected ? 'visible w-full' : 'invisible w-0'}`}
+                                    className={`${isSelected ? 'hover:select-all select-none' : ''}`}
                                 />
-                            }
+                            </div>
+
                             {/* Details */}
                             <div className='flex gap-1'>
                                 {/* Auto name */}
@@ -132,7 +135,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                                         :
                                         ( !isSelected &&
                                             <span title='Link to selected color' onClick={handleAddLink}>
-                                                <IconLinkPlus className={`h-4 cursor-pointer transition-all w-4 invisible opacity-0 hover:scale-125 group-hover/header:visible group-hover/header:opacity-100 hover:w-4`} /> 
+                                                <IconLinkPlus className={`h-4 cursor-pointer transition-all w-4 invisible opacity-0 hover:scale-125 group-hover/color-set:visible group-hover/color-set:opacity-100 hover:w-4`} /> 
                                             </span>
                                         )
                                     )
@@ -140,7 +143,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                                 {/* Remove */}
                                 { removeColor &&
                                     <span title='Remove from palette' onClick={removeColor}>
-                                        <IconTrashX className={`h-4 cursor-pointer transition-all ${((!!isSelected == !!selectColorSet)) ? 'w-4 visible opacity-100' : 'w-0 invisible opacity-0'} hover:w-4 hover:scale-110`} /> 
+                                        <IconTrashX className={`h-4 cursor-pointer transition-all ${(!!isSelected == !!selectColorSet) ? 'w-4 visible' : 'w-0 invisible group-hover/color-set:visible group-hover/color-set:w-4'} hover:w-4 hover:scale-110`} /> 
                                     </span>
                                 }
                             </div>

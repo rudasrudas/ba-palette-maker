@@ -1,6 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 import DragLabel from "./DragLabel";
 import useVerticalDrag from "@hooks/useVerticalDrag";
+import Tooltip from "@components/ui/Tooltip";
 
 const NumberInput = ({ 
         value, 
@@ -42,20 +43,43 @@ const NumberInput = ({
     );
 
     const { onStart } = useVerticalDrag(displayValue, handleSetValue, { scale: step })
+
+    const [isTypeable, setIsTypeable] = useState(false)
+
+    const inputRef = useRef(null)
+
+    const handleDoubleClick = (e) => {
+        e.stopPropagation()
+        setIsTypeable(true)
+        inputRef.current.focus()
+    }
+
+    const handleBlur = () => {
+        setIsTypeable(false)
+    }
     
     return (
         <div 
             onClick={(e) => e.stopPropagation()} 
-            className="relative group/input"
+            className="relative group/input max-w-fit"
         >
+            <Tooltip text="Double-click to type a value">
+                <div 
+                    className={`absolute inset-0 cursor-n-resize ${isTypeable ? 'hidden' : 'block'}`}
+                    onMouseDown={onStart}
+                    onDoubleClick={handleDoubleClick}
+                ></div>
+            </Tooltip>
+
+
             <input
+                ref={inputRef}
+                onBlur={handleBlur}
                 type="text"
                 inputmode="numeric"
                 value={displayValue}
                 onChange={onInputChange}
-                onMouseDown={onStart}
-                onDoubleClick={(e) => e.stopPropagation()}
-                className={`p-1 pr-4 rounded-md leading-none text-right border-black dark:border-white group-hover/input:border-black dark:group-hover/input:border-white border-[1px] transition-all ${className}`}
+                className={`p-1 pr-4 rounded-md leading-none text-right ${isTypeable ? 'select-text' : 'select-none'} border-black dark:border-white group-hover/input:border-black dark:group-hover/input:border-white border-[1px] transition-all ${className}`}
                 {...props}
             />
             <DragLabel
