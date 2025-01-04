@@ -2,6 +2,7 @@ import ColorSetList from "../color-set/ColorSetList"
 import ColorGroupHeader from "./ColorGroupHeader"
 import { useState } from "react"
 import { SETTING_TYPES } from "@hooks/useActiveSetting"
+import { v4 as uuidv4 } from 'uuid';
 
 export const MAX_COLORS_IN_COLOR_GROUP = 4;
 
@@ -19,7 +20,7 @@ const ColorGroup = ({ palette, setPalette, colorGroup, setColorGroup, contrastBa
     }
 
     const getNewColor = () => {
-        const id = parseInt(Math.random() * 100000) //CHANGE
+        const id = uuidv4()
         return { empty: true, id }
     }
 

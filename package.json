@@ -26,7 +26,8 @@
     "react-helmet": "^6.1.0",
     "react-intersection-observer": "^9.10.2",
     "sharp": "^0.33.4",
-    "tw-merge": "^0.0.1-alpha.3"
+    "tw-merge": "^0.0.1-alpha.3",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",

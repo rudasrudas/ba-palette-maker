@@ -14,12 +14,7 @@ import ColorblindnessNotice from '@components/page-structure/notifications/Color
 import ThemeSwitcher from '@components/ui/ThemeSwitcher'
 import Notifications from '@components/page-structure/Notifications'
 import CookieConsent from '@components/page-structure/notifications/CookieConsent'
-import ButtonSecondaryMedium from '@components/ui/inputs/buttons/ButtonSecondaryMedium'
-import ParameterDivider from '@components/ui/ParameterDivider'
-import { IconMouse, IconPointer } from '@tabler/icons-react'
 import ButtonPrimaryMedium from '@components/ui/inputs/buttons/ButtonPrimaryMedium'
-import HeaderTool from './tools/HeaderTool'
-import { COLOR_FORMATS } from '@hooks/useColorExport'
 import HeaderTools from './tools/HeaderTools'
 import TitleExtraLarge from '@components/ui/text/TitleExtraLarge'
 
@@ -44,8 +39,6 @@ function Edit() {
     useEffect(() => {
         if(!page || (!palette && page !== PAGES.PICKER)) setPage(PAGES.FORM)
     }, [page, palette])
-
-    useEffect(() => console.log(formColors), [formColors])
 
     const isPage = (p) => p === page
 

@@ -13,10 +13,11 @@ import ButtonIcon from "@components/ui/inputs/buttons/ButtonIcon"
 import Tooltip from "@components/ui/Tooltip"
 import { useEffect } from "react"
 import TitleSmall from "@components/ui/text/TitleSmall"
+import { v4 as uuidv4 } from 'uuid';
 
 export const getNewCustomColor = () => {
     return {
-        id: parseInt(Math.random() * 100000), // To change in the future with a UUID
+        id: uuidv4(),
         oklch: null,
         empty: true
     }
@@ -28,9 +29,9 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
     const MAX_SELECTED_COUNT = 3
 
     const { suggestions, refresh : refreshSuggestions } = useSimpleSuggestions({
-        // existingColors: formColors,
         action: [Suggestions.ACTIONS.ADD],
-        count: SUGGESTION_COUNT
+        count: SUGGESTION_COUNT,
+        type: [Suggestions.TYPES.RANDOM]
     })
 
     const colorCount = (countEmpty = false) => formColors.filter(c => !countEmpty ? !c.empty : true).length
@@ -49,9 +50,11 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
         return newCustomColor
     }
 
-    const addSelectedColor = (suggestion) => {
+    const addSuggestedColor = (suggestion) => {
 
         if(maxSelectedLimitReached()) return
+
+        suggestion.id = uuidv4()
 
         setFormColors(prev => ([
             ...prev.filter(p => !p.empty),
@@ -82,7 +85,7 @@ const PaletteForm = ({ formColors, setFormColors, generate, className, ...props 
                         <ColorSuggestionList
                             suggestions={suggestions} 
                             selected={[]}
-                            onSelect={addSelectedColor}
+                            onSelect={addSuggestedColor}
                             refresh={refreshSuggestions}
                             count={SUGGESTION_COUNT}
                             maxSelect={MAX_SELECTED_COUNT}

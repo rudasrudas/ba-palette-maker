@@ -1,5 +1,4 @@
 import Paragraph from "@components/ui/text/Paragraph";
-import Text from "@components/ui/text/Text";
 import { IconColorPicker } from "@tabler/icons-react";
 import { useRef } from "react";
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import useColorName from './useColorName';
 import { oklchToHex, oklchToHsl, oklchToRgb } from '@utils/colorConversion';
 import { roundConditionally } from './useColor';
+import { v4 as uuidv4 } from 'uuid';
 
 const ACTIONS = {
     ADD: 'add',
@@ -45,7 +46,7 @@ export const oklchToColorObject = (color) => {
 
     const name = useColorName({ colors: [{ hex }], useShort: true })
 
-    return { 
+    return {
         oklch,
         hex,
         rgb,
