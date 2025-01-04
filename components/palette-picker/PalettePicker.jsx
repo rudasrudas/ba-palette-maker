@@ -39,6 +39,12 @@ const PalettePicker = ({ formColors, setPalette, goBack, edit, className, ...pro
                     <ColorHarmonyInfo key={activePalette?.harmonyType} harmonyType={activePalette?.harmonyType} className={`${activePalette?.harmonyType ? 'visible' : 'invisible' }`} />
 
                     <ButtonRow className='mt-auto'>
+                        
+                    </ButtonRow>
+                </div>
+                <div className="flex flex-col gap-8 w-full md:w-1/2 md:ml-auto h-full">
+                    <PaletteDisplay className='w-full h-full min-h-[50dvh]' providedColors={formColors} colorGroups={activePalette?.colorGroups} />
+                    <ButtonRow className='pt-0 mt-auto'>
                         <ButtonSecondary onClick={generate} tracking={{
                             action: 'regenerate_palette',
                             category: 'Button',
@@ -46,13 +52,8 @@ const PalettePicker = ({ formColors, setPalette, goBack, edit, className, ...pro
                             value: '1',
                         }}>
                             Regenerate
-                            <IconRotate className="w-4 h-4"/>
+                            <IconRotate/>
                         </ButtonSecondary>
-                    </ButtonRow>
-                </div>
-                <div className="flex flex-col gap-8 w-full md:w-1/2 md:ml-auto h-full">
-                    <PaletteDisplay className='w-full h-full min-h-[50dvh]' providedColors={formColors} colorGroups={activePalette?.colorGroups} />
-                    <ButtonRow className='pt-0 mt-auto'>
                         <ButtonPrimary onClick={handleOpenEditor} tracking={{
                             action: 'open_editor',
                             category: 'Button',

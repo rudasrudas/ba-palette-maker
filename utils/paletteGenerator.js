@@ -83,11 +83,11 @@ export default class PaletteGenerator {
                 id: 'accents',
                 lightness: {
                     limit: { min: 0, max: 1 },
-                    minShadeDifference: 0.1
+                    minShadeDifference: 0.07
                 },
                 chroma: {
                     limit: { min: 0.09, max: 0.37 },
-                    minShadeDifference: 0.01
+                    minShadeDifference: 0.005
                 },
                 colors: [],
                 shadeLimits: { min: 4, max: 9 },
@@ -98,7 +98,7 @@ export default class PaletteGenerator {
                 id: 'neutrals',
                 lightness: {
                     limit: { min: 0, max: 1 },
-                    minShadeDifference: 0.1
+                    minShadeDifference: 0.07
                 },
                 chroma: {
                     limit: { min: 0.01, max: 0.09 },
@@ -113,7 +113,7 @@ export default class PaletteGenerator {
                 id: 'grays',
                 lightness: {
                     limit: { min: 0, max: 1 },
-                    minShadeDifference: 0.08
+                    minShadeDifference: 0.07
                 },
                 chroma: {
                     limit: { min: 0, max: 0.02 },
@@ -121,7 +121,7 @@ export default class PaletteGenerator {
                 },
                 colors: [],
                 shadeLimits: { min: 6, max: 9 },
-                hueLimits: { min: 1, max: 1 }
+                hueLimits: { min: 1, max: 2 }
             }
         ]
     }
@@ -155,10 +155,10 @@ export default class PaletteGenerator {
                     const originalHues = colorGroup.colors.map(color => 'correctedHue' in color ? color.correctedHue : color.hue ).filter(a => a)
                     const numberOfHuesToSelect = getRandomInt(colorGroup.hueLimits.min - originalHues.length, colorGroup.hueLimits.max - originalHues.length)
 
-                    const availableHues = [...new Set([...harmony.hues])]
+                    const availableHues = [...new Set([...harmony.hues])].filter(h => !originalHues.includes(h))
 
                     let attempts = 0
-                    while (selectedHues.length < numberOfHuesToSelect && attempts < 100) {
+                    while (selectedHues.length < numberOfHuesToSelect && attempts < 100 && availableHues.length) {
                         attempts++
                         const randomIndex = getRandomInt(0, availableHues.length - 1)
                         const hue = availableHues[randomIndex]

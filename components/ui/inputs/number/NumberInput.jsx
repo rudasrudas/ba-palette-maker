@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import DragLabel from "./DragLabel";
+import useVerticalDrag from "@hooks/useVerticalDrag";
 
 const NumberInput = ({ 
         value, 
@@ -40,26 +41,26 @@ const NumberInput = ({
         [transformValueForStorage, normalizeValue]
     );
 
-    const onClick = (e) => {
-        e.stopPropagation();
-    }
+    const { onStart } = useVerticalDrag(displayValue, handleSetValue, { scale: step })
     
     return (
-        <div className="relative group/input">
+        <div 
+            onClick={(e) => e.stopPropagation()} 
+            className="relative group/input"
+        >
             <input
                 type="text"
                 inputmode="numeric"
                 value={displayValue}
                 onChange={onInputChange}
-                onClick={onClick}
+                onMouseDown={onStart}
+                onDoubleClick={(e) => e.stopPropagation()}
                 className={`p-1 pr-4 rounded-md leading-none text-right border-black dark:border-white group-hover/input:border-black dark:group-hover/input:border-white border-[1px] transition-all ${className}`}
                 {...props}
             />
             <DragLabel
-                value={displayValue}
-                setValue={handleSetValue}
+                onStart={onStart}
                 name={name}
-                scale={step}
             />
         </div>
     );
