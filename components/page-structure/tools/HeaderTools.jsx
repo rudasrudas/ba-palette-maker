@@ -39,6 +39,7 @@ const HeaderTools = () => {
             return (
                 <>
                     <HeaderTool
+                        key={tool.key}
                         {...tool}
                         isActive={isActive}
                         onClick={() => setActiveTool(isActive ? null : tool.key)}
