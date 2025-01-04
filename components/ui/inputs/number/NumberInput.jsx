@@ -44,7 +44,10 @@ const NumberInput = ({
     const { onStart } = useVerticalDrag(displayValue, handleSetValue, { scale: step })
     
     return (
-        <div onClick={(e) => e.stopPropagation()} className="relative group/input">
+        <div 
+            onClick={(e) => e.stopPropagation()} 
+            className="relative group/input"
+        >
             <input
                 type="text"
                 inputmode="numeric"
