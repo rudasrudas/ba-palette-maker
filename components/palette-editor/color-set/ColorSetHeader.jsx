@@ -100,7 +100,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                                     <IconPencil className={`transition-all -my-1 h-4 cursor-pointer ${isSelected ? 'w-4 ml-2 visible group-hover/name:scale-110' : 'w-0 invisible group-hover/name:w-4 group-hover/name:ml-2 group-hover/name:visible'}`} />
                                 }
                             </div>
-                            <div className={`ml-auto transition-all duration-75 ${isSelected ? 'opacity-100' : 'group-hover/color-set:opacity-30 !hover:opacity-100 opacity-0'}`}>
+                            <div className={`ml-auto transition-all duration-75 ${isSelected ? 'opacity-100 w-fit' : 'group-hover/color-set:opacity-30 group-hover/color-set:w-fit !hover:opacity-100 opacity-0 w-0'}`}>
                             {/* <div className={`ml-auto ${isSelected ? 'visible w-fit' : 'invisible w-0'}`}> */}
                                 <HueInput
                                     colorId={color.id}
