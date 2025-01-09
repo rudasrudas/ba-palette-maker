@@ -1,20 +1,28 @@
+import ColorGenerationErrorNotice from "@components/page-structure/notifications/ColorGenerationErrorNotice"
 import PaletteGenerator from "@utils/paletteGenerator"
 import { useEffect, useState } from "react"
 
 // Generates color palettes based on provided colors.
 
-const usePaletteGenerator = (providedColors) => {
+const usePaletteGenerator = (providedColors, onError = () => {}) => {
     const paletteGenerator = new PaletteGenerator()
 
     const [createdPalettes, setCreatedPalettes] = useState([])
     const [activePalette, setActivePalette] = useState(null)
-    const [variations, setVariations] = useState()
+    const [variations, setVariations] = useState(paletteGenerator.createVariations(providedColors))
 
     const generate = () => {
-        const generated = variations?.generate()
-        setCreatedPalettes(prev => [...prev, generated])
+        if(!variations) return
 
-        setActivePalette(generated)
+        const generated = variations.generate()
+
+        if(generated) {
+            setCreatedPalettes(prev => [...prev, generated])
+            setActivePalette(generated)
+        } else {
+            console.log("Error generating palette")
+            onError()
+        }
     }
 
     const selectPrevPalette = () => {
@@ -30,10 +38,6 @@ const usePaletteGenerator = (providedColors) => {
             setActivePalette(createdPalettes[currentIndex + 1]);
         }
     }
-
-    useEffect(() => {
-        setVariations(paletteGenerator.createVariations(providedColors))
-    }, [])
 
     useEffect(() => {
         generate()

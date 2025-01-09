@@ -13,12 +13,22 @@ import { IconArrowLeft, IconArrowRight, IconRotate } from "@tabler/icons-react"
 import ColorHarmonyInfo from "./ColorHarmonyInfo"
 import * as gtag from '@utils/gtag'
 import { SELECTION_TYPES } from "@components/page-structure/PaletteMaker"
+import React, { useEffect } from "react"
+import ColorGenerationErrorNotice from "@components/page-structure/notifications/ColorGenerationErrorNotice"
 
-const PalettePicker = ({ formColors, setPalette, goBack, edit, className, ...props }) => {
+const PalettePicker = ({ formColors, setPalette, goBack = () => {}, edit = () => {}, className, ...props }) => {
 
-    const { generate, createdPalettes, activePalette, selectPrevPalette, selectNextPalette } = usePaletteGenerator(formColors)
+    if(formColors.length === 0 || (formColors.length === 1 && !formColors[0].oklch) ) {
+        goBack()
+    }
+
+    const onError = () => goBack(true)
+
+    const { generate, createdPalettes, activePalette, selectPrevPalette, selectNextPalette } = usePaletteGenerator(formColors, onError)
 
     const handleOpenEditor = () => {
+        if(!activePalette) return
+
         setPalette(activePalette)
         edit()
     }
@@ -32,18 +42,22 @@ const PalettePicker = ({ formColors, setPalette, goBack, edit, className, ...pro
             <div className="flex gap-10 h-full items-stretch justify-stretch flex-wrap md:flex-nowrap">
                 <div className="flex flex-col gap-12">
                     <div>
-                        <TitleLarge className='pt-0'>Select your new palette</TitleLarge>
-                        <Text className='max-w-md pt-0'>Pick out your favorite color palette and proceed to the next step to tweak it to perfection</Text>
+                        <TitleLarge className='pt-0'>Select generated palette</TitleLarge>
+                        <Text className='max-w-md pt-0'>Click "Regenerate" until you get a desired palette. Then click "Edit" to proceed.</Text>
                     </div>
 
-                    <ColorHarmonyInfo key={activePalette?.harmonyType} harmonyType={activePalette?.harmonyType} className={`${activePalette?.harmonyType ? 'visible' : 'invisible' }`} />
+                    { activePalette &&
+                        <ColorHarmonyInfo key={activePalette.harmonyType} harmonyType={activePalette.harmonyType} className={`${activePalette.harmonyType ? 'visible' : 'invisible' }`} />
+                    }
 
                     <ButtonRow className='mt-auto'>
                         
                     </ButtonRow>
                 </div>
                 <div className="flex flex-col gap-8 w-full md:w-1/2 md:ml-auto h-full">
-                    <PaletteDisplay className='w-full h-full min-h-[50dvh]' providedColors={formColors} colorGroups={activePalette?.colorGroups} />
+                    { activePalette && activePalette.colorGroups && activePalette.colorGroups.length > 0 &&
+                        <PaletteDisplay className='w-full h-full min-h-[50dvh]' providedColors={formColors} colorGroups={activePalette.colorGroups} />
+                    }
                     <ButtonRow className='pt-0 mt-auto'>
                         <ButtonSecondary onClick={generate} tracking={{
                             action: 'regenerate_palette',

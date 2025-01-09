@@ -6,7 +6,7 @@ import useQueryState from "@hooks/useQueryState"
 
 const PALETTE_TOOLS = {
     COPY_TOOL: {
-        key: "copy",
+        id: "copy",
         title: "Copy tool",
         Icon: IconPointer,
         query: "format",
@@ -14,12 +14,12 @@ const PALETTE_TOOLS = {
         defaultOption: COLOR_FORMATS.HEX
     },
     CONTRAST_TOOL: {
-        key: "contrast",
+        id: "contrast",
         title: "Contrast",
         Icon: IconContrast
     },
     COLORBLIND_TOOL: {
-        key: "colorblind",
+        id: "colorblind",
         title: "Colorblind",
         Icon: IconEyeglass2,
         query: "colorblindness",
@@ -35,16 +35,15 @@ const HeaderTools = () => {
     const renderTools = () => {
         return Object.values(PALETTE_TOOLS).map(tool => {
 
-            const isActive = tool.key === activeTool
+            const isActive = tool.id === activeTool
             return (
                 <>
                     <HeaderTool
-                        key={tool.key}
+                        key={tool.id}
                         {...tool}
                         isActive={isActive}
-                        onClick={() => setActiveTool(isActive ? null : tool.key)}
+                        onClick={() => setActiveTool(isActive ? null : tool.id)}
                     />
-                    {/* <ParameterDivider/> */}
                 </>
             )
         })
@@ -52,9 +51,7 @@ const HeaderTools = () => {
 
     return (
         <>
-            {/* <ParameterDivider/> */}
             {renderTools()}
-            
         </>
     )
 }

@@ -1,6 +1,5 @@
-import { EDITOR_MODES } from "@components/palette-editor/palette-settings/GeneralSettings"
-import { COLOR_FORMATS } from "@hooks/useColorExport"
 import { getRandomInt } from "./utils"
+import { v4 as uuidv4 } from 'uuid';
 
 const { default: ColorHarmonyBuilder } = require("./colorHarmonyBuilder")
 
@@ -38,34 +37,39 @@ export default class PaletteGenerator {
         const lightnessChromaVariations = this.generateLightnessChromaVariations()
 
         const generate = () => {
-            const hvc = hueVariations.length
-            const hV = hueVariations[Math.floor(Math.random() * hvc)]
-            const harmonyType = hV[0].harmonyType
+            try {
+                const hvc = hueVariations.length
+                const hV = hueVariations[Math.floor(Math.random() * hvc)]
+                const harmonyType = hV[0].harmonyType
 
-            const groups = this.colorGroups.map(cg => {
-                const updatedGroup = { ...cg }
+                const groups = this.colorGroups.map(cg => {
+                    const updatedGroup = { ...cg }
 
-                const cgLightnessChromaVariations = lightnessChromaVariations.find(v => v.id === cg.id).variations
-                const lcvCount = cgLightnessChromaVariations.length
-                const lcV = cgLightnessChromaVariations[Math.floor(Math.random() * lcvCount)]
+                    const cgLightnessChromaVariations = lightnessChromaVariations.find(v => v.id === cg.id).variations
+                    const lcvCount = cgLightnessChromaVariations.length
+                    const lcV = cgLightnessChromaVariations[Math.floor(Math.random() * lcvCount)]
 
-                updatedGroup.harmonyType = hV?.find(a => a.id === cg.id).harmonyType
-                updatedGroup.colors = hV?.find(a => a.id === cg.id).hues
-                    .map(h => ({ name: '', hue: h, isLocked: false, id: Math.floor(Math.random()*3000) }))
-                    .sort(() => Math.random() - 0.5); //Sort in random order
-                updatedGroup.advanced = true
-                updatedGroup.count = lcV.count
-                updatedGroup.lightness = lcV.lightness
-                updatedGroup.chroma = lcV.chroma
+                    updatedGroup.harmonyType = hV?.find(a => a.id === cg.id).harmonyType
+                    updatedGroup.colors = hV?.find(a => a.id === cg.id).hues
+                        .map(h => ({ name: '', hue: h, isLocked: false, id: uuidv4() }))
+                        .sort(() => Math.random() - 0.5); //Sort in random order
+                    updatedGroup.advanced = true
+                    updatedGroup.count = lcV.count
+                    updatedGroup.lightness = lcV.lightness
+                    updatedGroup.chroma = lcV.chroma
 
-                return updatedGroup
-            })
+                    return updatedGroup
+                })
 
-            return {
-                id: Math.floor(Math.random() * 3000),
-                links: [],
-                colorGroups: groups,
-                harmonyType,
+                return {
+                    id: uuidv4(),
+                    links: [],
+                    colorGroups: groups,
+                    harmonyType
+                }
+            } catch (e) {
+                console.log('Error generating palette', e)
+                return null
             }
         }
 
@@ -373,7 +377,7 @@ export default class PaletteGenerator {
 
                     if(filtered.length) variations.push(...filtered)
 
-                    else console.log('No filtered chroma lightness variations found', possiblePositions)
+                    // else console.log('No filtered chroma lightness variations found', possiblePositions)
 
                 } else {
                     for(let j = 0; j < 10; j++) {

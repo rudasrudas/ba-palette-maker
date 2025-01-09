@@ -14,7 +14,7 @@ import Testimonial from "./Testimonial"
 const HeroSection = () => {
     return (
         <Column className='pt-4'>
-            <TitleExtraLarge className='text-balance max-w-3xl'>Create unlimited color palettes in 10 seconds</TitleExtraLarge>
+            <TitleExtraLarge className='text-balance max-w-3xl'>Generate and edit color palettes for the web</TitleExtraLarge>
             <SectionColumns>
                 <SectionColumns.ColumnSection className='h-[30dvh] md:h-[60dvh]'>
                     <PaletteDisplayHero/>
@@ -28,10 +28,10 @@ const HeroSection = () => {
                             Create a palette
                         </ButtonPrimary>
                         <ButtonSecondary href="/#features" Icon={IconArrowRight}>
-                            Explore features
+                            View features
                         </ButtonSecondary>
                     </ButtonRow>
-                    <Column className='pt-6'>
+                    {/* <Column className='pt-6'>
                         <Testimonial
                             stars={5}
                             author={'Zachary'}
@@ -47,7 +47,7 @@ const HeroSection = () => {
                             author={'Felix'}
                             text={`It's a super decent free tool.`}
                         />
-                    </Column>
+                    </Column> */}
                 </SectionColumns.ColumnSection>
             </SectionColumns>
         </Column>

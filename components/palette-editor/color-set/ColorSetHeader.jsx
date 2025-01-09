@@ -75,7 +75,7 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                         // Preset header for new color
                         <>
                             <div className={`group/name transition-colors flex items-center ${selectColorSet ? 'cursor-pointer' : 'cursor-default'} border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
-                                <span className={`truncate whitespace-nowrap leading-none`}>New color</span>
+                                <span className={`truncate whitespace-nowrap leading-none select-none`}>New color</span>
                             </div>
                             {
                                 isSelected &&
@@ -94,22 +94,25 @@ const ColorSetHeader = ({ isEditable = false, isLockable, color, setColor, class
                         // Default header
                         <>
                             {/* Name */}
-                            <div onClick={(e) => handleEditingChange(e)(true)} title={isEditable ? 'Edit name' : undefined} className={`mr-auto group/name transition-colors flex items-center cursor-pointer border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
+                            <div onClick={(e) => handleEditingChange(e)(true)} title={isEditable ? 'Edit name' : undefined} className={`mr-auto group/name transition-colors flex items-center cursor-pointer select-none border rounded-md p-1 ${isSelected ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black' : 'group-hover/color-set:border-black dark:group-hover/color-set:border-white border-transparent'}`}>
                                 <ColorName>{name}</ColorName>
                                 { isEditable &&
                                     <IconPencil className={`transition-all -my-1 h-4 cursor-pointer ${isSelected ? 'w-4 ml-2 visible group-hover/name:scale-110' : 'w-0 invisible group-hover/name:w-4 group-hover/name:ml-2 group-hover/name:visible'}`} />
                                 }
                             </div>
-                            <div className={`ml-auto transition-all duration-75 ${isSelected ? 'opacity-100 w-fit' : 'group-hover/color-set:opacity-30 group-hover/color-set:w-fit !hover:opacity-100 opacity-0 w-0'}`}>
-                            {/* <div className={`ml-auto ${isSelected ? 'visible w-fit' : 'invisible w-0'}`}> */}
-                                <HueInput
-                                    colorId={color.id}
-                                    linkFunctions={linkFunctions}
-                                    hue={color.hue}
-                                    setHue={(v) => setColor(prev => ({ ...prev, hue: typeof v === 'function' ? v(prev.hue) : v }))}
-                                    className={`${isSelected ? 'hover:select-all select-none' : ''}`}
-                                />
-                            </div>
+
+                            { (isLockable && setColor) &&
+                                <div className={`ml-auto transition-all duration-75 ${isSelected ? 'opacity-100 w-fit' : 'group-hover/color-set:opacity-30 group-hover/color-set:w-fit !hover:opacity-100 opacity-0 w-0'}`}>
+                                {/* <div className={`ml-auto ${isSelected ? 'visible w-fit' : 'invisible w-0'}`}> */}
+                                    <HueInput
+                                        colorId={color.id}
+                                        linkFunctions={linkFunctions}
+                                        hue={color.hue}
+                                        setHue={(v) => setColor(prev => ({ ...prev, hue: typeof v === 'function' ? v(prev.hue) : v }))}
+                                        className={`${isSelected ? 'hover:select-all select-none' : ''}`}
+                                    />
+                                </div>
+                            }
 
                             {/* Details */}
                             <div className='flex gap-1'>

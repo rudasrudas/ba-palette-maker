@@ -9,7 +9,9 @@ import NumberInput from "@components/ui/inputs/number/NumberInput"
 import { mapRange } from "@utils/colorConversion"
 import ParameterDivider from "@components/ui/ParameterDivider"
 import ButtonIcon from "@components/ui/inputs/buttons/ButtonIcon"
-import { IconContrast2, IconEaseInOut, IconEaseInOutControlPoints, IconTrendingUp3 } from "@tabler/icons-react"
+import { IconEaseInOutControlPoints } from "@tabler/icons-react"
+import DraggablePopup from "@components/ui/containers/DraggablePopup"
+import CubicBezierSelector from "@components/ui/inputs/sliders/CubicBezierSelector"
 
 const ColorGroupHeader = ({ colorGroup, setColorGroup, selectColorGroup, addColorSet, isActiveSetting, isColorLimitReached, ...props }) => {
 
@@ -55,7 +57,7 @@ const ColorGroupHeader = ({ colorGroup, setColorGroup, selectColorGroup, addColo
                 className={`${isSelected ? 'opacity-100 w-fit' : 'group-hover/color-group-header:opacity-30 opacity-0 select-none w-auto'} overflow-hidden relative cursor-default flex justify-stretch h-min items-end gap-2 transition-all duration-300`}
             >
                 <div onClick={selectColorGroup} className={`cursor-pointer h-full w-full z-60 absolute right-0 left-0 top-0 bottom-0 ${isSelected ? 'hidden' : 'block'}`}></div>
-                <div onClick={selectColorGroup} className={`cursor-pointer h-full z-50 bg-gradient-to-r from-transparent to-white dark:to-black absolute right-0 top-0 bottom-0 transition-all ${isSelected ? 'w-0' : 'w-32'}`}></div>
+                <div onClick={selectColorGroup} className={`cursor-pointer h-full z-50 bg-gradient-to-r from-transparent to-white dark:to-black absolute right-0 top-0 bottom-0 transition-all ${isSelected ? 'w-0' : 'w-16'}`}></div>
                 <ParameterDivider/>
                 <ParameterSmall title="Shades">
                     <CountSelector
@@ -91,10 +93,20 @@ const ColorGroupHeader = ({ colorGroup, setColorGroup, selectColorGroup, addColo
                         name="%"
                         className={'max-w-14'}
                     />
-                    <ButtonIcon
-                        className={`aspect-square h-full`}
-                        Icon={IconEaseInOutControlPoints}
-                    />
+                    <DraggablePopup>
+                        <DraggablePopup.Trigger>
+                            <ButtonIcon
+                                className="aspect-square h-full"
+                                Icon={IconEaseInOutControlPoints}
+                            />
+                        </DraggablePopup.Trigger>
+                        <DraggablePopup.Contents title={"Lightness distribution function"}>
+                            <CubicBezierSelector
+                                onChange={memoizedHandleParameterChange(['lightness', 'distribution'])}
+                                initial={colorGroup.lightness.distribution}
+                            />
+                        </DraggablePopup.Contents>
+                    </DraggablePopup>
                 </ParameterSmall>
                 <ParameterDivider/>
                 <ParameterSmall title="Saturation range">
@@ -122,10 +134,20 @@ const ColorGroupHeader = ({ colorGroup, setColorGroup, selectColorGroup, addColo
                         name="%"
                         className={'max-w-14'}
                     />
-                    <ButtonIcon
-                        className={`aspect-square h-full`}
-                        Icon={IconEaseInOutControlPoints}
-                    />
+                    <DraggablePopup>
+                        <DraggablePopup.Trigger>
+                            <ButtonIcon
+                                className="aspect-square h-full"
+                                Icon={IconEaseInOutControlPoints}
+                            />
+                        </DraggablePopup.Trigger>
+                        <DraggablePopup.Contents title={"Saturation distribution function"}>
+                            <CubicBezierSelector 
+                                onChange={memoizedHandleParameterChange(['chroma', 'distribution'])} 
+                                initial={colorGroup.chroma.distribution}
+                            />
+                        </DraggablePopup.Contents>
+                    </DraggablePopup>
                 </ParameterSmall>
                 <ParameterDivider/>
                 <Tooltip text={isColorLimitReached ? 'Maximum color limit reached' : 'Add new color'}>

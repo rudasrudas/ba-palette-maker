@@ -17,6 +17,7 @@ import CookieConsent from '@components/page-structure/notifications/CookieConsen
 import ButtonPrimaryMedium from '@components/ui/inputs/buttons/ButtonPrimaryMedium'
 import HeaderTools from './tools/HeaderTools'
 import TitleExtraLarge from '@components/ui/text/TitleExtraLarge'
+import ColorGenerationErrorNotice from './notifications/ColorGenerationErrorNotice'
 
 export const PAGES = {
     FORM: 'new',
@@ -35,6 +36,16 @@ function Edit() {
     const [palette, setPalette] = useState()
     const [formColors, setFormColors] = useState([getNewCustomColor()])
     const [page, setPage] = useQueryState('status')
+
+    const [colorGenerationError, setColorGenerationError] = useState(false)
+
+    // function to enable color generation error and turn off after 5 sec
+    const onColorPickerError = () => {
+        setColorGenerationError(true)
+        setTimeout(() => {
+            setColorGenerationError(false)
+        }, 5000)
+    }
 
     useEffect(() => {
         if(!page || (!palette && page !== PAGES.PICKER)) setPage(PAGES.FORM)
@@ -70,7 +81,7 @@ function Edit() {
                     <PaletteForm formColors={formColors} setFormColors={setFormColors} generate={() => setPage(PAGES.PICKER)} />
                 }
                 { isPage(PAGES.PICKER) &&
-                    <PalettePicker formColors={formColors} setPalette={setPalette} goBack={() => setPage(PAGES.FORM)} edit={() => setPage(PAGES.EDITOR)} />
+                    <PalettePicker formColors={formColors} setPalette={setPalette} goBack={(isError) => { isError && onColorPickerError(); setPage(PAGES.FORM);}} edit={() => setPage(PAGES.EDITOR)} />
                 }
                 { isPage(PAGES.EDITOR) &&
                     <PaletteEditor palette={palette} setPalette={setPalette} />
@@ -83,6 +94,7 @@ function Edit() {
             <Notifications>
                 <ColorblindnessNotice/>
                 <CookieConsent/>
+                { colorGenerationError && <ColorGenerationErrorNotice/> }
             </Notifications>
         </>
     )

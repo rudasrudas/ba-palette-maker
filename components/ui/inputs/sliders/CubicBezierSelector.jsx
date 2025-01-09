@@ -20,8 +20,8 @@ const CubicBezierSelector = ({ onChange, initial }) => {
     const [x1, y1, x2, y2] = controlPoints
 
     return (
-        <div className='flex flex-col gap-3 mt-1 w-fit'>
-            <div {...bezierCurveProps} className="relative bg-white dark:bg-black w-96 h-40 overflow-visible border border-black dark:border-white rounded-lg">
+        <div className='flex flex-col gap-3 mt-1 w-fit bg-gray-100'>
+            <div {...bezierCurveProps} className="relative bg-white dark:bg-black w-72 h-40 overflow-visible border border-black dark:border-white rounded-lg">
             <svg ref={svgRef} 
                 width={dim.width} 
                 height={dim.height} 
