@@ -48,3 +48,13 @@ export const oklchToRgb = ({ lightness, chroma, hue }) => {
         blue: rgb[2],
     }
 }
+
+export const contrastTextColor = (color) => {
+    if(isValidHex(color)) {
+        return chromaJs.contrast(color, 'white') > 4.5 ? '#FFFFFF' : '#000000'
+    }
+    if(isOklch(color)) {
+        return color.lightness < 0.6 ? '#FFFFFF' : '#000000'
+    }
+    return '#000000'
+}

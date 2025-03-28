@@ -7,7 +7,6 @@ import "@styles/global.css"
 
 import { brittiSans } from "@utils/fonts"
 import { Suspense } from "react"
-import ClaritySnippet from "@components/page-structure/ClaritySnippet"
 
 export const metadata = {
   title: "Color Palette Maker - Generate, perfect and export",
@@ -23,7 +22,6 @@ export default function RootLayout({ children }) {
                     <ConsentProvider>
                         <head>
                             <Favicon />
-                            <ClaritySnippet />
                         </head>
                         <body className={`${brittiSans.className} overflow-x-hidden min-h-dvh h-full w-full flex flex-col items-stretch bg-white dark:bg-black`}>
                             {children}

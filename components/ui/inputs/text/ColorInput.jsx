@@ -1,6 +1,8 @@
 import Paragraph from "@components/ui/text/Paragraph";
+import useColor from "@hooks/useColor";
 import { IconColorPicker } from "@tabler/icons-react";
-import { useRef } from "react";
+import { contrastTextColor, hexToOklch } from "@utils/colorConversion";
+import { useEffect, useRef } from "react";
 
 const ColorInput = ({ id, color, setColor, className, ...props }) => {
 
@@ -24,12 +26,11 @@ const ColorInput = ({ id, color, setColor, className, ...props }) => {
             style={{ backgroundColor: color }}
             onClick={handleClick}
           >
-            { !color &&
-                <div className="flex flex-col items-center justify-center text-gray-400 group-hover/color-input:scale-105 transition-all">
-                    <IconColorPicker stroke={1.5} className="w-6 h-6"/>
-                    <Paragraph>Click to edit</Paragraph>
-                </div>
-            }
+          <div className={`flex flex-col z-10 items-center justify-center group-hover/color-input:scale-105 transition-all ${color ? 'group-hover/color-input:visible invisible' : 'text-gray-400 visible'}`}
+              style={{ color: color ? contrastTextColor(color) : 'text-gray-400' }}>
+              <IconColorPicker stroke={1.5} className="w-6 h-6"/>
+              <Paragraph>Click to edit</Paragraph>
+          </div>
           </div>
           <input
             ref={inputRef}

@@ -8,7 +8,7 @@ const Testimonial = ({ stars, author, text, className}) => {
     const renderStars = () => {
         const starList = []
         for(let i = 0; i < stars; i++) {
-            starList.push(<IconStarFilled key={i} className={'w-4 h-4'}/>);
+            starList.push(<IconStarFilled key={i} className={'w-4 h-4 text-gray-800'}/>);
         }
 
         return (
@@ -21,8 +21,8 @@ const Testimonial = ({ stars, author, text, className}) => {
     return (
         <div className={`flex flex-col gap-1 ${className}`}>
             {renderStars()}
-            <Text>{text}</Text>
-            <TitleExtraSmall>-{author}</TitleExtraSmall>
+            <Text className={'text-gray-800'}>{text}</Text>
+            <TitleExtraSmall className={'text-gray-400'}>-{author}</TitleExtraSmall>
         </div>
     )
 }

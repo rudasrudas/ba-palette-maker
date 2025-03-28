@@ -1,4 +1,4 @@
-import { oklchToHex, oklchToHsl, oklchToRgb } from "@utils/colorConversion"
+import { contrastTextColor, oklchToHex, oklchToHsl, oklchToRgb } from "@utils/colorConversion"
 import { Bezier } from "bezier-js"
 
 const useColor = ({ count, lightness, chroma, hue, advanced }) => {
@@ -25,7 +25,7 @@ const useColor = ({ count, lightness, chroma, hue, advanced }) => {
 
             gradient.push({
                 oklch: oklchObject,
-                contrastTextColor: l < 0.6 ? '#FFFFFF' : '#000000',
+                contrastTextColor: contrastTextColor(oklchObject),
                 hex,
                 rgb,
                 hsl,
